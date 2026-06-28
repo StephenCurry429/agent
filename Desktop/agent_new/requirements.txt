@@ -4,3 +4,6 @@ transformers==4.30.2
 requests
 langchain
 langchain-openai
+numpy
+pandas
+pillow
