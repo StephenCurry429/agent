@@ -1,0 +1,3580 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>W_X_L_C</title>
+  <style>
+    /* ================================================================
+       THEME TOKENS — 8px grid · 1 primary + 2 auxiliary + 5-step grey
+       ================================================================ */
+    :root {
+      /* Typography scale */
+      --font-sans: "Inter Variable", "Inter", "SF Pro Display", -apple-system, system-ui, "Segoe UI", Roboto, sans-serif;
+      --font-mono: "Berkeley Mono", ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+      --h1: 24px; --h2: 20px; --h3: 18px; --h4: 16px; --h5: 14px; --h6: 12px;
+      --lh-tight: 1.2; --lh-base: 1.5; --lh-relaxed: 1.6;
+
+      /* Radius — 8px / 12px only */
+      --radius-sm: 8px;
+      --radius-lg: 12px;
+      --radius-pill: 999px;
+
+      /* Easing */
+      --ease: cubic-bezier(0.4, 0, 0.2, 1);
+      --fast: 150ms;
+      --base: 200ms;
+      --slow: 300ms;
+
+      /* Layout */
+      --sidebar-w: 240px;
+      --config-w: 288px;
+      --topbar-h: 48px;
+      --min-target: 44px;
+    }
+
+    /* ── Dark Theme (default) ────────────────────────────────────── */
+    [data-theme="dark"] {
+      --gray-50:  #f7f8f8;
+      --gray-100: #e8eaed;
+      --gray-200: #d0d6e0;
+      --gray-300: #8a8f98;
+      --gray-400: #62666d;
+      --gray-500: #2d3035;
+      --gray-600: #1a1c20;
+      --gray-700: #0f1012;
+
+      --bg:           #111318;
+      --bg-panel:     #181a1f;
+      --bg-elevated:  #1e2028;
+      --bg-hover:     #272a33;
+      --bg-active:    #2a2d38;
+      --bg-input:     rgba(255,255,255,0.04);
+
+      --fg:           var(--gray-50);
+      --fg-2:         var(--gray-200);
+      --fg-3:         var(--gray-300);
+      --fg-4:         var(--gray-400);
+
+      --border:       rgba(255,255,255,0.08);
+      --border-soft:  rgba(255,255,255,0.05);
+
+      /* Primary: Doubao Blue */
+      --accent:       #4F6EF7;
+      --accent-hover: #6B85FF;
+      --accent-active:#3D5BD9;
+      --accent-glow:  rgba(79,110,247,0.15);
+
+      --success:      #10b981;
+      --success-bg:   rgba(16,185,129,0.1);
+      --danger:       #ef4444;
+      --danger-bg:    rgba(239,68,68,0.1);
+
+      --shell:        #0d0e12;
+      --scrollbar:    rgba(255,255,255,0.06);
+      --scrollbar-h:  rgba(255,255,255,0.12);
+
+      --shadow-sm:    0 1px 2px rgba(0,0,0,0.4);
+      --shadow-md:    0 4px 12px rgba(0,0,0,0.5);
+    }
+
+    /* ── Light Theme ─────────────────────────────────────────────── */
+    [data-theme="light"] {
+      --gray-50:  #f9fafb;
+      --gray-100: #f2f4f7;
+      --gray-200: #e4e7ed;
+      --gray-300: #b0b8c8;
+      --gray-400: #8b94a6;
+      --gray-500: #5e6677;
+      --gray-600: #383e4a;
+      --gray-700: #1d2129;
+
+      --bg:           #f5f6fa;
+      --bg-panel:     #ffffff;
+      --bg-elevated:  #ffffff;
+      --bg-hover:     var(--gray-100);
+      --bg-active:    var(--gray-200);
+      --bg-input:     #f2f4f7;
+
+      --fg:           var(--gray-700);
+      --fg-2:         var(--gray-600);
+      --fg-3:         var(--gray-500);
+      --fg-4:         var(--gray-300);
+
+      --border:       rgba(0,0,0,0.08);
+      --border-soft:  rgba(0,0,0,0.05);
+
+      --accent:       #4F6EF7;
+      --accent-hover: #3D5BD9;
+      --accent-active:#2E4AC4;
+      --accent-glow:  rgba(79,110,247,0.08);
+
+      --success:      #059669;
+      --success-bg:   rgba(5,150,105,0.08);
+      --danger:       #dc2626;
+      --danger-bg:    rgba(220,38,38,0.06);
+
+      --shell:        #f0f2f5;
+      --scrollbar:    rgba(0,0,0,0.08);
+      --scrollbar-h:  rgba(0,0,0,0.15);
+
+      --shadow-sm:    0 1px 3px rgba(0,0,0,0.04);
+      --shadow-md:    0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    /* ================================================================
+       RESET
+       ================================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      font: var(--h5)/var(--lh-base) var(--font-sans);
+      background: var(--shell);
+      color: var(--fg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Scrollbar — 4px (8px grid subset) */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--scrollbar); border-radius: var(--radius-pill); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-h); }
+
+    /* ================================================================
+       LAYOUT SHELL
+       ================================================================ */
+    .app {
+      display: flex;
+      width: 100%; height: 100vh;
+      background: var(--bg);
+    }
+
+    /* ================================================================
+       SIDEBAR
+       ================================================================ */
+    .sidebar {
+      width: var(--sidebar-w);
+      min-width: var(--sidebar-w);
+      height: 100%;
+      background: var(--bg-panel);
+      border-right: 1px solid var(--border-soft);
+      display: flex;
+      flex-direction: column;
+      transition: width var(--slow) var(--ease), min-width var(--slow) var(--ease), opacity var(--fast) var(--ease);
+      overflow: hidden;
+      position: relative;
+      z-index: 10;
+    }
+    .sidebar.collapsed {
+      width: 0; min-width: 0;
+      border-right: none;
+      opacity: 0; pointer-events: none;
+    }
+
+    .sidebar-header {
+      padding: 16px 14px 8px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      flex-shrink: 0;
+    }
+    .logo {
+      width: 30px; height: 30px;
+      background: linear-gradient(135deg, #4F6EF7, #7AA2F7);
+      border-radius: 9px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+    .logo svg { width: 15px; height: 15px; color: #fff; }
+    .logo-text {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      color: var(--fg);
+      white-space: nowrap;
+    }
+
+    .btn-new-chat {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      width: calc(100% - 28px);
+      margin: 4px 14px 12px;
+      padding: 9px 16px;
+      min-height: var(--min-target);
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font: 13px/var(--lh-tight) var(--font-sans);
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+      flex-shrink: 0;
+      box-shadow: 0 1px 2px rgba(79,110,247,0.2);
+    }
+    .btn-new-chat:hover { background: var(--accent-hover); box-shadow: 0 2px 8px rgba(79,110,247,0.3); }
+    .btn-new-chat:active { background: var(--accent-active); transform: scale(0.98); }
+    .btn-new-chat:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-new-chat svg { width: 14px; height: 14px; opacity: 0.9; }
+
+    /* History */
+    .history { flex: 1; overflow-y: auto; padding: 0 6px; }
+    .history::-webkit-scrollbar { width: 4px; }
+    .history::-webkit-scrollbar-track { background: transparent; }
+    .history::-webkit-scrollbar-thumb { background: var(--border-soft); border-radius: 4px; }
+    .history::-webkit-scrollbar-thumb:hover { background: var(--border); }
+    .history-group-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--fg-4);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 14px 10px 6px;
+      white-space: nowrap;
+    }
+    .history-item {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px 8px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s ease, box-shadow 0.15s ease;
+      position: relative;
+      margin: 1px 0;
+    }
+    .history-item:hover { background: var(--bg-hover); }
+    .history-item:active { background: var(--bg-active); transform: scale(0.985); }
+    .history-item.active {
+      background: rgba(79,110,247,0.08);
+      box-shadow: inset 3px 0 0 var(--accent);
+    }
+    .history-item.active .title { color: var(--fg); font-weight: 500; }
+    .history-item .h-icon {
+      width: 20px; height: 20px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      color: var(--fg-4);
+      transition: color 0.15s ease;
+    }
+    .history-item.active .h-icon { color: var(--accent); }
+    .history-item .h-icon svg { width: 12px; height: 12px; }
+    .history-item .title {
+      font-size: var(--h6);
+      color: var(--fg-2);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1; min-width: 0;
+      -webkit-user-select: none;
+      user-select: none;
+      transition: color 0.15s ease;
+    }
+    .history-item .h-time {
+      font-size: 10px;
+      color: var(--fg-4);
+      font-family: var(--font-mono);
+      width: 100%;
+      padding-left: 28px;
+    }
+    .history-item .actions {
+      display: flex;
+      gap: 2px;
+      flex-shrink: 0;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+    .history-item:hover .actions,
+    .history-item.active .actions { opacity: 1; }
+    .history-item .actions button {
+      width: 26px; height: 26px;
+      display: grid;
+      place-items: center;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      color: var(--fg-4);
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+    .history-item .actions button:hover { background: rgba(0,0,0,0.06); color: var(--fg); }
+    .history-item .actions button:active { background: rgba(0,0,0,0.1); }
+    .history-item .actions button svg { width: 13px; height: 13px; }
+
+    .history-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 16px 32px;
+      text-align: center;
+      gap: 6px;
+    }
+    .history-empty .he-icon {
+      width: 36px; height: 36px;
+      color: var(--fg-4);
+      opacity: 0.3;
+    }
+    .history-empty .he-icon svg { width: 36px; height: 36px; }
+    .history-empty .he-text { font-size: 13px; font-weight: 500; color: var(--fg-4); line-height: var(--lh-base); }
+    .history-empty .he-hint {
+      font-size: 11px;
+      color: var(--fg-4);
+      opacity: 0.5;
+      max-width: 160px;
+      line-height: 1.5;
+    }
+
+    /* Sidebar footer */
+    .sidebar-footer {
+      border-top: 1px solid var(--border-soft);
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .sidebar-footer .avatar {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4F6EF7, #7AA2F7);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      box-shadow: 0 1px 3px rgba(79,110,247,0.25);
+    }
+    .sidebar-footer .user-info { flex: 1; overflow: hidden; }
+    .sidebar-footer .user-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--fg-2);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .sidebar-footer .user-role { font-size: 11px; color: var(--fg-4); }
+    .sidebar-footer .btn-settings {
+      width: 28px; height: 28px;
+      display: grid;
+      place-items: center;
+      background: transparent;
+      border: none;
+      border-radius: var(--radius-sm);
+      color: var(--fg-3);
+      cursor: pointer;
+      transition: background var(--fast) var(--ease), color var(--fast) var(--ease);
+      flex-shrink: 0;
+    }
+    .sidebar-footer .btn-settings:hover { background: var(--bg-hover); color: var(--fg); }
+    .sidebar-footer .btn-settings:active { opacity: 0.7; }
+    .sidebar-footer .btn-settings svg { width: 16px; height: 16px; }
+
+    /* Collapse toggle — slim bar on sidebar edge, always visible */
+    .sidebar-toggle {
+      position: absolute;
+      top: 50%;
+      left: calc(var(--sidebar-w) - 2px);
+      transform: translateY(-50%);
+      width: 16px; height: 48px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-left: none;
+      border-radius: 0 var(--radius-pill) var(--radius-pill) 0;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      color: var(--fg-3);
+      z-index: 30;
+      transition: left var(--slow) var(--ease), background var(--fast) var(--ease), color var(--fast) var(--ease);
+      box-shadow: 1px 0 4px rgba(0,0,0,0.1);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .sidebar-toggle:hover { background: var(--bg-hover); color: var(--fg); }
+    .sidebar-toggle:active { background: var(--accent-glow); color: var(--accent); }
+    .sidebar-toggle svg { width: 10px; height: 10px; transition: transform var(--base) var(--ease); }
+    .sidebar.collapsed ~ .sidebar-toggle {
+      left: 0;
+      border-left: 1px solid var(--border);
+      border-radius: 0 var(--radius-pill) var(--radius-pill) 0;
+    }
+    .sidebar.collapsed ~ .sidebar-toggle svg { transform: rotate(180deg); }
+
+    /* ================================================================
+       MAIN CHAT AREA
+       ================================================================ */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      position: relative;
+    }
+    .main-topbar {
+      height: var(--topbar-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      border-bottom: 1px solid var(--border-soft);
+      flex-shrink: 0;
+      background: var(--bg);
+    }
+    .main-topbar .model-badge {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      color: var(--fg-3);
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+    .main-topbar .model-badge .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 6px var(--success-bg);
+    }
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .topbar-actions button {
+      width: 32px; height: 32px;
+      display: grid;
+      place-items: center;
+      background: transparent;
+      border: none;
+      border-radius: var(--radius-sm);
+      color: var(--fg-3);
+      cursor: pointer;
+      transition: background var(--fast) var(--ease), color var(--fast) var(--ease);
+    }
+    .topbar-actions button:hover { background: var(--bg-hover); color: var(--fg); }
+    .topbar-actions button:active { opacity: 0.7; }
+    .topbar-actions button svg { width: 16px; height: 16px; }
+
+    /* ── Chat body / empty state ─────────────────────────────────── */
+    .chat-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 40px 24px 24px;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+    }
+    .chat-body.has-messages { justify-content: flex-start; padding-top: 32px; }
+
+    .empty-state {
+      text-align: center;
+      max-width: 640px;
+      width: 100%;
+      animation: fadeUp 0.5s var(--ease);
+      transition: opacity 0.3s var(--ease);
+      padding: 40px 0;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .empty-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--fg-3);
+      letter-spacing: 0.02em;
+    }
+    .empty-brand .dot-live {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 6px var(--success);
+      animation: pulse-dot 2s infinite var(--ease);
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .empty-icon {
+      width: 72px; height: 72px;
+      margin: 0 auto 24px;
+      background: linear-gradient(135deg, rgba(79,110,247,0.08), rgba(79,110,247,0.04));
+      border: 1px solid rgba(79,110,247,0.15);
+      border-radius: 20px;
+      display: grid;
+      place-items: center;
+    }
+    .empty-icon svg { width: 32px; height: 32px; color: var(--accent); }
+    .empty-title {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      color: var(--fg);
+      margin-bottom: 8px;
+    }
+    .empty-sub {
+      font-size: var(--h5);
+      color: var(--fg-4);
+      margin-bottom: 32px;
+      line-height: var(--lh-relaxed);
+    }
+    .suggestions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 0;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .suggestion-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-soft);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: border-color var(--fast) var(--ease), background var(--fast) var(--ease), box-shadow var(--fast) var(--ease), transform var(--fast) var(--ease);
+      white-space: nowrap;
+      font-size: 13px;
+      color: var(--fg-2);
+      font-weight: 450;
+    }
+    .suggestion-chip:hover {
+      border-color: var(--accent);
+      background: rgba(79,110,247,0.04);
+      box-shadow: 0 1px 6px rgba(79,110,247,0.08);
+      transform: translateY(-1px);
+      color: var(--accent);
+    }
+    .suggestion-chip:active { transform: scale(0.97); }
+    .suggestion-chip .sc-icon {
+      width: 20px; height: 20px;
+      border-radius: 5px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+    .suggestion-chip .sc-icon svg { width: 12px; height: 12px; }
+    .suggestion-chip .sc-icon.c1 { background: rgba(79,110,247,0.1); color: var(--accent); }
+    .suggestion-chip .sc-icon.c2 { background: rgba(16,185,129,0.1); color: var(--success); }
+    .suggestion-chip .sc-icon.c3 { background: rgba(245,158,11,0.1); color: #f59e0b; }
+    .suggestion-chip .sc-icon.c4 { background: rgba(239,68,68,0.08); color: var(--danger); }
+    .suggestion-chip .sc-icon.c5 { background: rgba(139,92,246,0.1); color: #8b5cf6; }
+    .suggestion-chip .sc-icon.c6 { background: rgba(14,165,233,0.1); color: #0ea5e9; }
+
+    /* ── Input area ──────────────────────────────────────────────── */
+    .input-area {
+      padding: 16px 24px 20px;
+      max-width: 800px;
+      width: 100%;
+      margin: 0 auto;
+      flex-shrink: 0;
+    }
+    @media (max-width: 639px) {
+      .input-area { padding: 12px 16px 16px; }
+    }
+    .file-tags {
+      display: none;
+      gap: 4px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .file-tags.has-files { display: flex; }
+    .file-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px 4px 8px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: var(--h6);
+      color: var(--fg-2);
+    }
+    .file-tag .ft-icon { color: var(--accent); display: flex; }
+    .file-tag .ft-icon svg { width: 12px; height: 12px; }
+    .file-tag .ft-name { max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .file-tag .ft-remove {
+      width: 16px; height: 16px;
+      display: grid;
+      place-items: center;
+      background: transparent;
+      border: none;
+      border-radius: 50%;
+      color: var(--fg-4);
+      cursor: pointer;
+      transition: background var(--fast) var(--ease), color var(--fast) var(--ease);
+    }
+    .file-tag .ft-remove:hover { background: var(--danger-bg); color: var(--danger); }
+    .file-tag .ft-remove:active { background: rgba(239,68,68,0.2); }
+    .file-tag .ft-remove svg { width: 8px; height: 8px; }
+
+    .input-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      background: var(--bg-elevated);
+      border: 1.5px solid var(--border);
+      border-radius: 24px;
+      padding: 6px 6px 6px 16px;
+      transition: border-color var(--fast) var(--ease), box-shadow var(--fast) var(--ease);
+      box-shadow: var(--shadow-sm);
+    }
+    .input-row:focus-within {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(79,110,247,0.12);
+    }
+    .input-row .btn-upload {
+      width: 36px; height: 36px;
+      display: grid;
+      place-items: center;
+      background: transparent;
+      border: none;
+      border-radius: 50%;
+      color: var(--fg-3);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background var(--fast) var(--ease), color var(--fast) var(--ease);
+    }
+    .input-row .btn-upload:hover { background: var(--bg-hover); color: var(--fg); }
+    .input-row .btn-upload:active { opacity: 0.7; }
+    .input-row .btn-upload svg { width: 18px; height: 18px; }
+    .input-row textarea {
+      flex: 1;
+      background: transparent;
+      border: none; outline: none;
+      resize: none;
+      font: var(--h5)/var(--lh-base) var(--font-sans);
+      color: var(--fg);
+      padding: 8px 0;
+      min-height: 24px;
+      max-height: 160px;
+    }
+    .input-row textarea::placeholder { color: var(--fg-4); }
+    .input-row .btn-send {
+      width: 38px; height: 38px;
+      display: grid;
+      place-items: center;
+      background: var(--accent);
+      border: none;
+      border-radius: 50%;
+      color: #fff;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background var(--fast) var(--ease), transform var(--fast) var(--ease), box-shadow var(--fast) var(--ease);
+      box-shadow: 0 2px 8px rgba(79,110,247,0.25);
+    }
+    .input-row .btn-send:hover { background: var(--accent-hover); box-shadow: 0 4px 12px rgba(79,110,247,0.35); }
+    .input-row .btn-send:active { background: var(--accent-active); transform: scale(0.95); }
+    .input-row .btn-send:disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+    .input-row .btn-send svg { width: 16px; height: 16px; }
+    .btn-send .spinner {
+      display: none;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+    .btn-send.loading .send-icon { display: none; }
+    .btn-send.loading .spinner { display: block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .input-hint {
+      text-align: center;
+      font-size: 11px;
+      color: var(--fg-4);
+      margin-top: 8px;
+    }
+
+    /* ================================================================
+       CONFIG PANEL
+       ================================================================ */
+    .config-panel {
+      width: var(--config-w);
+      min-width: var(--config-w);
+      height: 100%;
+      background: var(--bg-panel);
+      border-left: 1px solid var(--border-soft);
+      display: flex;
+      flex-direction: column;
+      transition: width var(--slow) var(--ease), min-width var(--slow) var(--ease), opacity var(--fast) var(--ease);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    .config-panel.collapsed {
+      width: 0; min-width: 0;
+      border-left: none;
+      opacity: 0; pointer-events: none;
+    }
+    .config-header {
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .config-header h2 {
+      font-size: var(--h5);
+      font-weight: 600;
+      color: var(--fg);
+      letter-spacing: -0.1px;
+    }
+    .config-header .btn-collapse {
+      width: 24px; height: 24px;
+      display: grid;
+      place-items: center;
+      background: transparent;
+      border: none;
+      border-radius: var(--radius-sm);
+      color: var(--fg-3);
+      cursor: pointer;
+      transition: background var(--fast) var(--ease), color var(--fast) var(--ease);
+    }
+    .config-header .btn-collapse:hover { background: var(--bg-hover); color: var(--fg); }
+    .config-header .btn-collapse:active { opacity: 0.7; }
+    .config-header .btn-collapse svg { width: 12px; height: 12px; }
+
+    .config-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 16px;
+    }
+    .field { margin-bottom: 16px; }
+    .field-label {
+      font-size: var(--h6);
+      font-weight: 500;
+      color: var(--fg-3);
+      margin-bottom: 4px;
+      display: block;
+    }
+    .field select,
+    .field input[type="text"],
+    .field input[type="password"],
+    .field textarea {
+      width: 100%;
+      padding: 8px 12px;
+      min-height: 40px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font: var(--h6)/var(--lh-base) var(--font-sans);
+      color: var(--fg);
+      outline: none;
+      transition: border-color var(--fast) var(--ease), box-shadow var(--fast) var(--ease);
+      -webkit-appearance: none;
+    }
+    .field select:focus,
+    .field input:focus,
+    .field textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(79,110,247,0.15);
+    }
+    .field select {
+      background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%238a8f98' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 32px;
+      cursor: pointer;
+    }
+    .field select:hover { border-color: var(--fg-4); }
+    .field select:disabled { opacity: 0.5; cursor: not-allowed; }
+    .field input[type="text"]:disabled,
+    .field input[type="password"]:disabled { opacity: 0.5; cursor: not-allowed; }
+    .field input[type="password"] {
+      font-family: var(--font-mono);
+      letter-spacing: 0.08em;
+    }
+    .field .input-icon-wrap { position: relative; }
+    .field .input-icon-wrap input { padding-right: 36px; }
+    .field .input-icon-wrap .toggle-vis {
+      position: absolute;
+      right: 4px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 28px; height: 28px;
+      display: grid;
+      place-items: center;
+      background: transparent;
+      border: none;
+      border-radius: var(--radius-sm);
+      color: var(--fg-4);
+      cursor: pointer;
+      transition: color var(--fast) var(--ease), background var(--fast) var(--ease);
+    }
+    .field .input-icon-wrap .toggle-vis:hover { color: var(--fg-2); background: var(--bg-hover); }
+    .field .input-icon-wrap .toggle-vis:active { opacity: 0.7; }
+    .field .input-icon-wrap .toggle-vis svg { width: 12px; height: 12px; }
+    .field .field-hint {
+      font-size: 11px;
+      color: var(--fg-4);
+      margin-top: 4px;
+    }
+
+    /* Accordion */
+    .accordion {
+      border-top: 1px solid var(--border-soft);
+      margin-top: 4px;
+    }
+    .accordion-trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      min-height: var(--min-target);
+      background: transparent;
+      border: none;
+      font: var(--h6)/var(--lh-tight) var(--font-sans);
+      font-weight: 500;
+      color: var(--fg-3);
+      cursor: pointer;
+      transition: color var(--fast) var(--ease);
+    }
+    .accordion-trigger:hover { color: var(--fg-2); }
+    .accordion-trigger:active { opacity: 0.7; }
+    .accordion-trigger svg {
+      width: 12px; height: 12px;
+      transition: transform var(--base) var(--ease);
+    }
+    .accordion.open .accordion-trigger svg { transform: rotate(180deg); }
+    .accordion-body { display: none; padding-bottom: 8px; }
+    .accordion.open .accordion-body { display: block; }
+
+    /* Config footer */
+    .config-footer {
+      padding: 12px 16px 16px;
+      border-top: 1px solid var(--border-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .btn-row { display: flex; gap: 8px; }
+    .btn {
+      flex: 1;
+      padding: 8px 16px;
+      min-height: var(--min-target);
+      border-radius: var(--radius-sm);
+      font: var(--h6)/var(--lh-tight) var(--font-sans);
+      font-weight: 500;
+      cursor: pointer;
+      transition: background var(--fast) var(--ease), border-color var(--fast) var(--ease), transform var(--fast) var(--ease);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-secondary {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      color: var(--fg-2);
+    }
+    .btn-secondary:hover { background: var(--bg-hover); border-color: var(--fg-4); }
+    .btn-secondary:active { background: var(--bg-elevated); }
+    .btn-primary {
+      background: var(--accent);
+      border: 1px solid var(--accent);
+      color: #fff;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-primary:active { background: var(--accent-active); }
+    .status-msg {
+      display: none;
+      align-items: center;
+      gap: 4px;
+      font-size: var(--h6);
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+    }
+    .status-msg.success {
+      display: flex;
+      background: var(--success-bg);
+      color: var(--success);
+    }
+    .status-msg svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+    /* ================================================================
+       CHAT MESSAGES
+       ================================================================ */
+    .message-bubble {
+      display: flex;
+      gap: 12px;
+      padding: 12px 40px 12px 16px;
+      max-width: 780px;
+      width: 100%;
+      margin: 0 auto;
+      position: relative;
+      border-radius: var(--radius-lg);
+      transition: background var(--fast) var(--ease);
+    }
+    @media (max-width: 639px) {
+      .message-bubble { padding: 12px 16px; }
+    }
+    .message-bubble + .message-bubble { margin-top: 4px; }
+    .message-bubble:hover { background: var(--bg-elevated); }
+    .message-bubble .avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      display: grid;
+      place-items: center;
+      font-size: var(--h5);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .message-bubble.user .avatar {
+      background: var(--accent-glow);
+      border-color: var(--accent);
+    }
+    .message-bubble .message-content {
+      flex: 1;
+      min-width: 0;
+    }
+    .message-bubble .message-content p {
+      font-size: var(--h5);
+      line-height: var(--lh-relaxed);
+      color: var(--fg);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+      word-break: normal;
+      -webkit-user-select: text;
+      user-select: text;
+      margin: 0;
+    }
+    .message-bubble .message-content p code {
+      font-family: var(--font-mono);
+      font-size: var(--h6);
+      background: var(--bg-input);
+      padding: 2px 4px;
+      border-radius: 4px;
+      border: 1px solid var(--border-soft);
+    }
+    .message-bubble .message-content pre {
+      background: var(--shell);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      overflow-x: auto;
+      margin: 8px 0;
+      font-family: var(--font-mono);
+      font-size: var(--h6);
+      line-height: var(--lh-base);
+    }
+    .message-bubble .message-content pre code {
+      background: none; padding: 0; border: none;
+      color: var(--fg-2);
+    }
+    .message-bubble .message-time {
+      font-size: 11px;
+      color: var(--fg-4);
+      margin-top: 4px;
+    }
+    .message-bubble .message-actions {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      display: flex;
+      gap: 4px;
+      opacity: 0;
+      transition: opacity var(--fast) var(--ease);
+    }
+    .message-bubble:hover .message-actions,
+    .message-bubble .message-actions.visible { opacity: 1; }
+    .message-bubble .copy-btn {
+      width: 32px; height: 32px;
+      display: grid;
+      place-items: center;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      color: var(--fg-3);
+      font-size: 11px;
+      font-family: var(--font-sans);
+      font-weight: 500;
+      white-space: nowrap;
+      transition: background var(--fast) var(--ease), color var(--fast) var(--ease), border-color var(--fast) var(--ease), width var(--fast) var(--ease);
+      overflow: hidden;
+    }
+    .message-bubble .copy-btn:hover { background: var(--bg-hover); color: var(--fg); border-color: var(--fg-4); }
+    .message-bubble .copy-btn:active { opacity: 0.7; }
+    .message-bubble .copy-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+    .message-bubble .copy-btn .btn-label { display: none; }
+    .message-bubble .copy-btn.copied {
+      color: var(--success);
+      border-color: var(--success);
+      background: var(--success-bg);
+    }
+    .message-bubble .quote-btn {
+      width: 32px; height: 32px;
+      display: grid;
+      place-items: center;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      color: var(--fg-3);
+      transition: background var(--fast) var(--ease), color var(--fast) var(--ease), border-color var(--fast) var(--ease);
+    }
+    .message-bubble .quote-btn:hover { background: var(--bg-hover); color: var(--fg); border-color: var(--fg-4); }
+    .message-bubble .quote-btn:active { opacity: 0.7; }
+    .message-bubble .quote-btn.cited { color: var(--accent); border-color: var(--accent); background: var(--accent-glow); }
+    .message-bubble .quote-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+    .message-bubble .export-btn {
+      width: 32px; height: 32px;
+      display: grid;
+      place-items: center;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      color: var(--fg-3);
+      transition: background var(--fast) var(--ease), color var(--fast) var(--ease), border-color var(--fast) var(--ease);
+      position: relative;
+    }
+    .message-bubble .export-btn:hover { background: var(--bg-hover); color: var(--fg); border-color: var(--fg-4); }
+    .message-bubble .export-btn:active { opacity: 0.7; }
+    .message-bubble .export-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+    .export-dropdown {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      padding: 4px;
+      min-width: 170px;
+      display: none;
+      z-index: 100;
+    }
+    .export-dropdown.show { display: block; }
+    .export-dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      padding: 8px 12px;
+      border: none;
+      background: transparent;
+      color: var(--fg-2);
+      font-size: var(--h6);
+      font-family: var(--font-sans);
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      text-align: left;
+      transition: background var(--fast) var(--ease), color var(--fast) var(--ease);
+    }
+    .export-dropdown-item:hover { background: var(--bg-hover); color: var(--fg); }
+    .export-dropdown-item .ed-icon {
+      width: 16px; height: 16px;
+      display: grid; place-items: center;
+      flex-shrink: 0;
+    }
+    .export-dropdown-item .ed-label { flex: 1; }
+    .export-dropdown-item .ed-ext {
+      font-size: 11px;
+      color: var(--fg-4);
+      font-family: var(--font-mono);
+    }
+    /* On mobile always show copy on the last bot message */
+    @media (hover: none) and (pointer: coarse) {
+      .message-bubble.bot:last-of-type .message-actions { opacity: 1; }
+    }
+
+    /* Typing indicator */
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+    }
+    .typing-dots-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px; height: 32px;
+    }
+    .typing-dots-wrap::before {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 1.5px solid var(--accent);
+      opacity: 0;
+      animation: pulse-ring 1.6s ease-out infinite;
+    }
+    @keyframes pulse-ring {
+      0%   { transform: scale(0.6); opacity: 0.6; }
+      100% { transform: scale(1.3); opacity: 0; }
+    }
+    .typing-dots {
+      display: flex;
+      gap: 3px;
+      position: relative;
+      z-index: 1;
+    }
+    .typing-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: typing-bounce 1.4s infinite cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+    .typing-dot:nth-child(3) { animation-delay: 0s; }
+    @keyframes typing-bounce {
+      0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+      40% { transform: translateY(-6px); opacity: 1; }
+    }
+    .typing-label {
+      font-size: var(--h6);
+      font-weight: 500;
+      background: linear-gradient(110deg, var(--fg-4) 30%, var(--accent) 50%, var(--fg-4) 70%);
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer-text 2s ease-in-out infinite;
+    }
+    @keyframes shimmer-text {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* ================================================================
+       SILK DESIGN SYSTEM — component layer
+       ================================================================ */
+    .silk-card-base {
+      background: var(--bg-elevated);
+      border-radius: var(--radius-md);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      padding: var(--md);
+      transition: all var(--fast) var(--ease);
+    }
+    .silk-card-base:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .silk-input-base {
+      border: 1px solid var(--bg-hover);
+      border-radius: var(--radius-sm);
+      padding: var(--xs) var(--sm);
+      outline: none;
+      background: var(--bg-input);
+      color: var(--fg);
+      transition: border-color var(--fast) var(--ease), box-shadow var(--fast) var(--ease);
+    }
+    .silk-input-base:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+
+    /* Silk chat bubble — Doubao-style refined */
+    .silk-bubble-row {
+      display: flex;
+      align-items: flex-start;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto 16px;
+      padding: 0 24px;
+      box-sizing: border-box;
+      gap: 10px;
+    }
+    .silk-bubble-row.user {
+      justify-content: flex-end;
+    }
+
+    .silk-avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+    .silk-avatar svg { width: 15px; height: 15px; }
+    .silk-bubble-row.user .silk-avatar {
+      background: linear-gradient(135deg, #5B8DEF, #7AA2F7);
+      border: none;
+      color: #fff;
+      box-shadow: 0 2px 6px rgba(79,110,247,0.25);
+    }
+    .silk-bubble-row.bot .silk-avatar {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      color: var(--accent);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .silk-bubble {
+      flex: 1;
+      min-width: 0;
+      position: relative;
+      padding: 10px 16px;
+      border-radius: 16px;
+      line-height: 1.65;
+      font-size: var(--h5);
+    }
+    .silk-bubble-row.user .silk-bubble {
+      text-align: left;
+      background: linear-gradient(135deg, #4F6EF7, #6B85FF);
+      color: #fff;
+      border-bottom-right-radius: 4px;
+      padding: 10px 16px;
+      box-shadow: 0 2px 12px rgba(79,110,247,0.2);
+    }
+    .silk-bubble-row.bot .silk-bubble {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-sm);
+      border-bottom-left-radius: 4px;
+      padding: 10px 16px;
+      max-width: 85%;
+    }
+    .silk-bubble-row.user .silk-bubble .message-actions {
+      justify-content: flex-end;
+    }
+    .silk-bubble-row.user .silk-bubble p,
+    .silk-bubble-row.user .silk-bubble .md-content {
+      color: #fff;
+    }
+    .silk-bubble-row.user .silk-bubble .md-content strong { color: #fff; }
+    .silk-bubble-row.user .silk-bubble .md-content em { color: rgba(255,255,255,0.85); }
+    .silk-bubble-row.user .silk-bubble .md-content a { color: #fbbf24; border-bottom-color: rgba(251,191,36,0.3); }
+    .silk-bubble-row.user .silk-bubble .md-content blockquote {
+      border-left-color: rgba(255,255,255,0.4);
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.85);
+    }
+    .silk-bubble-row.user .silk-bubble .md-content code {
+      background: rgba(255,255,255,0.15);
+      border-color: rgba(255,255,255,0.2);
+      color: #fbbf24;
+    }
+    .silk-bubble-row.user .silk-bubble .md-content pre code {
+      background: rgba(0,0,0,0.3);
+      color: rgba(255,255,255,0.9);
+    }
+    .silk-bubble-row.user .silk-bubble .md-content th { background: rgba(255,255,255,0.1); color: #fff; }
+    .silk-bubble-row.user .silk-bubble .md-content td { color: rgba(255,255,255,0.9); border-bottom-color: rgba(255,255,255,0.1); }
+    .silk-bubble-row.user .silk-bubble .md-content li::marker { color: rgba(255,255,255,0.5); }
+    .silk-bubble-row.user .message-time { color: rgba(255,255,255,0.6); }
+    .silk-bubble-row.user .copy-btn,
+    .silk-bubble-row.user .quote-btn,
+    .silk-bubble-row.user .export-btn {
+      border-color: rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.7);
+    }
+    .silk-bubble-row.user .copy-btn:hover,
+    .silk-bubble-row.user .quote-btn:hover,
+    .silk-bubble-row.user .export-btn:hover {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      border-color: rgba(255,255,255,0.35);
+    }
+
+    .silk-bubble p {
+      font-size: var(--h5);
+      line-height: var(--lh-relaxed);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+      word-break: normal;
+      margin: 0;
+      -webkit-user-select: text;
+      user-select: text;
+      color: var(--fg);
+    }
+
+    /* ── Markdown 渲染内容 ─────────────────────────────────────── */
+    .silk-bubble .md-content {
+      font-size: var(--h5);
+      line-height: var(--lh-relaxed);
+      color: var(--fg);
+      -webkit-user-select: text;
+      user-select: text;
+    }
+    .silk-bubble .md-content h1,
+    .silk-bubble .md-content h2,
+    .silk-bubble .md-content h3,
+    .silk-bubble .md-content h4 {
+      color: var(--fg);
+      margin: 16px 0 8px;
+      line-height: var(--lh-tight);
+    }
+    .silk-bubble .md-content h1 { font-size: var(--h2); font-weight: 700; border-bottom: 1px solid var(--border-soft); padding-bottom: 6px; }
+    .silk-bubble .md-content h2 { font-size: var(--h3); font-weight: 600; }
+    .silk-bubble .md-content h3 { font-size: var(--h4); font-weight: 600; }
+    .silk-bubble .md-content p {
+      margin: 6px 0;
+      white-space: normal;
+    }
+    .silk-bubble .md-content strong { color: var(--fg); font-weight: 600; }
+    .silk-bubble .md-content em { color: var(--fg-2); }
+    .silk-bubble .md-content a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid var(--accent-glow);
+    }
+    .silk-bubble .md-content a:hover { color: var(--accent-hover); }
+    .silk-bubble .md-content ul, .silk-bubble .md-content ol {
+      margin: 8px 0;
+      padding-left: 20px;
+    }
+    .silk-bubble .md-content li { margin: 3px 0; line-height: var(--lh-base); }
+    .silk-bubble .md-content li::marker { color: var(--fg-3); }
+    .silk-bubble .md-content blockquote {
+      border-left: 3px solid var(--accent);
+      margin: 8px 0;
+      padding: 6px 12px;
+      background: var(--bg-input);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      color: var(--fg-2);
+    }
+    .silk-bubble .md-content blockquote p { margin: 4px 0; }
+    .silk-bubble .md-content hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 14px 0;
+    }
+    .silk-bubble .md-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0;
+      font-size: var(--h6);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+    .silk-bubble .md-content th,
+    .silk-bubble .md-content td {
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .silk-bubble .md-content th {
+      background: var(--bg-elevated);
+      font-weight: 600;
+      color: var(--fg-2);
+    }
+    .silk-bubble .md-content td { color: var(--fg); }
+    .silk-bubble .md-content tr:last-child td { border-bottom: none; }
+    .silk-bubble .md-content code {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      background: var(--bg-input);
+      padding: 2px 5px;
+      border-radius: 4px;
+      border: 1px solid var(--border-soft);
+      color: var(--accent-hover);
+    }
+    /* 代码块: 使用 highlight.js 主题，覆盖背景 */
+    .silk-bubble .md-content pre {
+      margin: 10px 0;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      overflow-x: auto;
+    }
+    .silk-bubble .md-content pre code {
+      display: block;
+      padding: 14px 16px;
+      background: var(--shell);
+      color: var(--fg-2);
+      font-size: 12.5px;
+      line-height: var(--lh-base);
+      border: none;
+      border-radius: 0;
+    }
+    .silk-bubble .md-content pre code.hljs { background: var(--shell); color: var(--fg-2); }
+
+    .silk-bubble .message-time {
+      font-size: 11px;
+      margin-top: 6px;
+      color: var(--fg-4);
+    }
+
+    /* Actions on silk bubble */
+    .silk-bubble .message-actions {
+      display: flex;
+      gap: 4px;
+      margin-top: 6px;
+      opacity: 0;
+      transition: opacity var(--fast) var(--ease);
+    }
+    .silk-bubble-row.user .silk-bubble .message-actions {
+      justify-content: flex-end;
+    }
+    .silk-bubble:hover .message-actions,
+    .silk-bubble .message-actions.visible { opacity: 1; }
+
+    .silk-bubble .copy-btn, .silk-bubble .quote-btn, .silk-bubble .export-btn {
+      width: 28px; height: 28px;
+      display: grid;
+      place-items: center;
+      background: transparent;
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      color: var(--fg-4);
+      position: relative;
+      transition: background var(--fast) var(--ease), color var(--fast) var(--ease), border-color var(--fast) var(--ease);
+    }
+    .silk-bubble .copy-btn:hover, .silk-bubble .quote-btn:hover, .silk-bubble .export-btn:hover {
+      background: var(--bg-hover);
+      color: var(--fg-2);
+      border-color: var(--border);
+    }
+
+    .silk-bubble .copy-btn svg, .silk-bubble .quote-btn svg, .silk-bubble .export-btn svg {
+      width: 13px; height: 13px;
+    }
+    .silk-bubble .copy-btn.copied { color: var(--success); border-color: var(--success); background: var(--success-bg); }
+    .silk-bubble .quote-btn.cited { color: var(--accent); border-color: var(--accent); background: var(--accent-glow); }
+
+    @media (max-width: 639px) {
+      .silk-bubble-row { padding: 10px 12px; }
+    }
+
+    /* Send button loading state */
+    .btn-send.loading {
+      background: var(--accent-active) !important;
+      pointer-events: none;
+    }
+    .btn-send.loading .spinner {
+      width: 18px; height: 18px;
+      border-width: 2.5px;
+      border-color: rgba(255,255,255,0.25);
+      border-top-color: #fff;
+      box-shadow: 0 0 12px rgba(99,102,241,0.5);
+    }
+
+    /* ================================================================
+       RESPONSIVE — 3 breakpoints: sm(640px) / md(1024px) / lg(1440px)
+       ================================================================ */
+    @media (max-width: 1023px) {
+      :root {
+        --sidebar-w: 220px;
+        --config-w: 260px;
+      }
+      .message-bubble { max-width: 100%; }
+    }
+
+    @media (max-width: 639px) {
+      :root {
+        --sidebar-w: 100%;
+        --config-w: 100%;
+      }
+      .sidebar-toggle { display: none; }
+      .sidebar:not(.collapsed) { position: fixed; z-index: 50; }
+      .config-panel:not(.collapsed) { position: fixed; right: 0; z-index: 50; }
+      .main-topbar { padding: 0 12px; }
+      .chat-body { padding: 16px; }
+      .suggestions { grid-template-columns: 1fr; }
+      .empty-title { font-size: var(--h3); }
+    }
+
+    @media (min-width: 1440px) {
+      .message-bubble { max-width: 860px; }
+    }
+
+    /* ================================================================
+       ACCESSIBILITY
+       ================================================================ */
+    .sr-only {
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px; overflow: hidden;
+      clip: rect(0,0,0,0); border: 0;
+    }
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+    button:focus:not(:focus-visible),
+    input:focus:not(:focus-visible),
+    textarea:focus:not(:focus-visible) { outline: none; }
+
+    /* ================================================================
+       THINK CHAIN — 5-color pipeline (collapsible)
+       ================================================================ */
+    .fold-section {
+      margin: 6px 0;
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      background: var(--bg-elevated);
+      position: relative;
+    }
+    /* Think 卡片额外装饰 */
+    .think-section .fold-section {
+      border-left: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    /* 左侧 accent 装饰条 — 仅思考卡片 */
+    .think-section .fold-section::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--border-soft);
+      border-radius: 3px 0 0 3px;
+      transition: background 0.2s ease;
+    }
+    .think-section .fold-section:not(.user-fold)::before {
+      background: var(--accent);
+    }
+    .think-section .fold-section:not(.user-fold) {
+      border-color: rgba(79,110,247,0.12);
+      box-shadow: 0 0 0 1px rgba(79,110,247,0.04);
+    }
+    /* 用户气泡内的折叠区块 — 适配蓝色背景 */
+    .silk-bubble-row.user .fold-section {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.15);
+    }
+    /* 搜索卡片在用户气泡内不被以上覆盖 */
+    .silk-bubble-row.user .search-source,
+    .silk-bubble-row.user .search-summary-list {
+      background: transparent;
+      border-color: rgba(255,255,255,0.12);
+    }
+    .silk-bubble-row.user .think-section .fold-section::before {
+      background: rgba(255,255,255,0.2);
+    }
+    .silk-bubble-row.user .think-section .fold-section:not(.user-fold)::before {
+      background: rgba(255,255,255,0.5);
+    }
+    .silk-bubble-row.user .fold-section:not(.user-fold) {
+      border-color: rgba(255,255,255,0.2);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.06);
+    }
+    .silk-bubble-row.user .search-source:not(.user-fold),
+    .silk-bubble-row.user .search-summary-list:not(.user-fold) {
+      border-color: rgba(255,255,255,0.12);
+      box-shadow: none;
+    }
+    .silk-bubble-row.user .fold-section-header {
+      color: rgba(255,255,255,0.8);
+    }
+    .silk-bubble-row.user .search-source .fold-section-header,
+    .silk-bubble-row.user .search-summary-list .fold-section-header {
+      color: rgba(255,255,255,0.7);
+    }
+    .silk-bubble-row.user .fold-section-header:hover {
+      background: rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.95);
+    }
+    .silk-bubble-row.user .fold-chevron,
+    .silk-bubble-row.user .fold-icon {
+      color: rgba(255,255,255,0.6);
+    }
+    .silk-bubble-row.user .fold-section:not(.user-fold) .fold-icon {
+      color: rgba(255,255,255,0.9);
+    }
+    .silk-bubble-row.user .fold-status {
+      color: rgba(255,255,255,0.6);
+    }
+    .silk-bubble-row.user .fold-status.running {
+      color: rgba(255,255,255,0.9);
+    }
+    .silk-bubble-row.user .fold-status.done {
+      color: rgba(255,255,255,0.8);
+    }
+    .silk-bubble-row.user .think-node-body {
+      color: rgba(255,255,255,0.85);
+    }
+    .silk-bubble-row.user .think-node.active { background: rgba(255,255,255,0.08); }
+    .silk-bubble-row.user .think-node.active::before { background: rgba(255,255,255,0.6); }
+    .silk-bubble-row.user .think-node.active .think-node-body { color: #fff; }
+    .silk-bubble-row.user .think-connector {
+      background: rgba(255,255,255,0.25);
+    }
+    .silk-bubble-row.user .think-node.active .think-connector {
+      background: rgba(255,255,255,0.5) !important;
+      box-shadow: 0 0 3px rgba(255,255,255,0.3);
+    }
+    .silk-bubble-row.user .think-node.done .think-node-body {
+      color: rgba(255,255,255,0.5);
+    }
+    .silk-bubble-row.user .fold-section.user-fold .fold-section-header {
+      color: rgba(255,255,255,0.55);
+    }
+    .fold-section-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      cursor: pointer;
+      -webkit-user-select: none;
+      user-select: none;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--fg-3);
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+    .fold-section-header:hover { background: var(--bg-hover); color: var(--fg-2); }
+    .fold-chevron { width: 12px; height: 12px; flex-shrink: 0; transition: transform 0.2s ease; color: var(--fg-4); }
+    .fold-section.user-fold .fold-chevron { transform: rotate(0deg); }
+    .fold-section:not(.user-fold) .fold-chevron { transform: rotate(90deg); }
+    .fold-icon { width: 14px; height: 14px; flex-shrink: 0; color: var(--fg-4); opacity: 0.6; }
+    .fold-section:not(.user-fold) .fold-icon { color: var(--accent); opacity: 0.8; }
+    .fold-status {
+      margin-left: auto;
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--fg-4);
+      opacity: 0.7;
+    }
+    .fold-status.running {
+      color: var(--accent);
+      opacity: 1;
+      animation: think-dot 1.4s ease-in-out infinite;
+    }
+    .fold-status.done {
+      color: var(--success);
+      opacity: 1;
+    }
+    .fold-section-body {
+      padding: 2px 10px 6px;
+      overflow: hidden;
+      max-height: 800px;
+      opacity: 1;
+      transition: max-height 0.3s ease, opacity 0.25s ease, padding 0.3s ease;
+    }
+    .fold-section.user-fold .fold-section-body {
+      max-height: 0;
+      opacity: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    /* Think pipeline */
+    /* ── Think Pipeline ── */
+    .think-pipeline { padding: 2px 0; display: flex; flex-direction: column; gap: 0; }
+
+    /* 容器级分组线（未运行/运行过的 phase 之间加一条细分割） */
+    .think-phase-group { position: relative; }
+    .think-phase-group + .think-phase-group {
+      margin-top: 2px;
+      padding-top: 2px;
+    }
+
+    .think-node {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      padding: 2px 0;
+      font-size: 11.5px;
+      line-height: 1.4;
+      border-radius: 4px;
+      position: relative;
+      transition: background 0.2s ease, opacity 0.2s ease;
+    }
+    .think-node-badge {
+      flex-shrink: 0;
+      padding: 0 6px;
+      border-radius: var(--radius-pill);
+      font-size: 10px;
+      font-weight: 600;
+      white-space: nowrap;
+      line-height: 1.6;
+      transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .think-node-body {
+      color: var(--fg-4);
+      word-break: break-all;
+      transition: color 0.2s ease;
+    }
+    .think-connector {
+      width: 2px;
+      height: 5px;
+      margin-left: 6px;
+      background: var(--border-soft);
+      border-radius: 1px;
+      transition: background 0.2s ease;
+    }
+
+    /* Pending / Done — 统一灰色弱化 */
+    .think-node.done .think-node-body,
+    .think-node.pending .think-node-body { color: var(--fg-4); opacity: 0.55; }
+
+    .think-node.done .think-node-badge,
+    .think-node.pending .think-node-badge {
+      background: rgba(128,128,128,0.08) !important;
+      color: var(--fg-4) !important;
+      opacity: 0.6;
+    }
+    .think-node.done .think-connector,
+    .think-node.pending .think-connector { background: var(--border-soft); opacity: 0.4; }
+
+    /* Done 追加小对勾 */
+    .think-node.done .think-node-badge::after {
+      content: '';
+      display: inline-block;
+      width: 8px; height: 8px;
+      margin-left: 2px;
+      vertical-align: -1px;
+      background: currentColor;
+      -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 6l2.5 3L10 3' stroke='white' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 6l2.5 3L10 3' stroke='white' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;
+    }
+
+    /* Active — 高亮，强实时感 */
+    .think-node.active {
+      background: rgba(79,110,247,0.04);
+      border-radius: 6px;
+      padding-left: 8px;
+      margin-left: -8px;
+    }
+    .think-node.active .think-node-body { color: var(--fg-2); opacity: 1; }
+    .think-node.active .think-node-badge {
+      animation: think-pulse 1.2s ease-in-out infinite;
+      box-shadow: 0 0 8px rgba(79,110,247,0.2);
+    }
+
+    /* 左侧走马灯指示条 */
+    .think-node.active::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 4px; bottom: 4px;
+      width: 3px;
+      border-radius: 0 2px 2px 0;
+      background: var(--accent);
+      animation: think-bar 0.8s ease-in-out infinite;
+    }
+    @keyframes think-bar {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* Badge 前面加呼吸灯小圆点 */
+    .think-node.active .think-node-badge::before {
+      content: '';
+      display: inline-block;
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      margin-right: 4px;
+      vertical-align: 1px;
+      background: currentColor;
+      animation: think-dot 0.7s ease-in-out infinite;
+      box-shadow: 0 0 4px currentColor;
+    }
+    @keyframes think-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(0.6); }
+    }
+
+    /* Active 节点上方的 connector 发光 */
+    .think-node.active .think-connector {
+      background: var(--accent) !important;
+      opacity: 0.6;
+      box-shadow: 0 0 3px rgba(79,110,247,0.3);
+    }
+
+    @keyframes think-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.55; }
+    }
+
+    /* Node colors — active 态才着色，非 active 时被统一覆盖为灰色 */
+    .think-node.active.decompose .think-node-badge { background: rgba(167,139,250,0.18) !important; color: #a78bfa !important; opacity: 1; }
+    .think-node.active.reason .think-node-badge { background: rgba(96,165,250,0.18) !important; color: #60a5fa !important; opacity: 1; }
+    .think-node.active.tools .think-node-badge { background: rgba(52,211,153,0.18) !important; color: #34d399 !important; opacity: 1; }
+    .think-node.active.validate .think-node-badge { background: rgba(251,191,36,0.18) !important; color: #fbbf24 !important; opacity: 1; }
+    .think-node.active.fix .think-node-badge { background: rgba(248,113,113,0.18) !important; color: #f87171 !important; opacity: 1; }
+    .think-node.active.summary .think-node-badge { background: var(--accent-glow) !important; color: var(--accent) !important; opacity: 1; }
+
+    [data-theme="dark"] .think-node.done .think-node-badge,
+    [data-theme="dark"] .think-node.pending .think-node-badge {
+      background: rgba(255,255,255,0.04) !important;
+    }
+    [data-theme="dark"] .think-node.active {
+      background: rgba(79,110,247,0.06);
+    }
+    [data-theme="dark"] .think-node.active .think-node-badge {
+      box-shadow: 0 0 10px rgba(79,110,247,0.3);
+    }
+    [data-theme="dark"] .think-node.active .think-connector {
+      box-shadow: 0 0 4px rgba(79,110,247,0.4);
+    }
+
+    /* Search sources */
+    .search-source {
+      margin: 4px 0 1px;
+      border: 1px solid rgba(79,110,247,0.10);
+      border-radius: 6px;
+      overflow: hidden;
+      background: transparent;
+    }
+    .search-source .fold-section-header {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--accent);
+      gap: 4px;
+      padding: 2px 6px;
+    }
+    .search-source .fold-section-body {
+      padding: 2px 6px 4px;
+      max-height: 130px;
+      overflow-y: auto;
+      font-size: 10px;
+      line-height: 1.4;
+      color: var(--fg-3);
+    }
+    .search-source.user-fold .fold-section-body {
+      max-height: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      opacity: 0;
+    }
+    .search-source .fold-section-body a {
+      color: var(--accent);
+      text-decoration: none;
+      display: block;
+      padding: 1px 0;
+      transition: color 0.15s;
+    }
+    .search-source .fold-section-body a:hover {
+      color: var(--accent-hover);
+      text-decoration: underline;
+    }
+    .search-source .fold-section-body a::before {
+      content: '🔗 ';
+      font-size: 9px;
+    }
+    .search-source .fold-section-body hr {
+      border: none;
+      border-top: 1px solid var(--border-soft);
+      margin: 3px 0;
+    }
+
+    /* 正文与搜索资源之间的视觉分隔 */
+    .search-source + .md-content {
+      margin-top: 4px;
+      border-top: 1px dashed var(--border-soft);
+      padding-top: 4px;
+    }
+    /* 搜索摘要 — 灰色字体内联展示，可折叠 */
+    .search-summary-list {
+      margin: 2px 0 1px;
+      border: none;
+      overflow: hidden;
+      border-radius: 6px;
+      background: transparent;
+    }
+    .search-summary-list .fold-section-header {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--fg-3);
+      gap: 4px;
+      padding: 2px 6px;
+      background: rgba(128,128,128,0.02);
+      border: 1px dashed var(--border-soft);
+      border-radius: 6px;
+      margin-bottom: 0;
+    }
+    .search-summary-list .fold-section-body {
+      padding: 2px 6px 4px;
+      font-size: 10px;
+      line-height: 1.4;
+      color: var(--fg-4);
+      background: transparent;
+      border: 1px dashed var(--border-soft);
+      border-top: none;
+      border-radius: 0 0 6px 6px;
+      max-height: 200px;
+      opacity: 1;
+      overflow: hidden;
+      transition: max-height 0.3s ease, opacity 0.25s ease, padding 0.3s ease;
+    }
+    .search-summary-list.user-fold .fold-section-body {
+      max-height: 0;
+      opacity: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .search-summary-item {
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(128,128,128,0.08);
+    }
+    .search-summary-item:last-child {
+      border-bottom: none;
+    }
+    .search-summary-item-title {
+      font-weight: 600;
+      color: var(--fg-3);
+      margin-bottom: 2px;
+    }
+    .search-summary-item-body {
+      color: var(--fg-4);
+      font-size: 11px;
+    }
+
+    /* ── Dark theme sidebar overrides ── */
+    [data-theme="dark"] .history-item.active {
+      background: rgba(79,110,247,0.12);
+    }
+    [data-theme="dark"] .history-item .actions button:hover {
+      background: rgba(255,255,255,0.08);
+    }
+    [data-theme="dark"] .history-item .actions button:active {
+      background: rgba(255,255,255,0.12);
+    }
+
+    /* ================================================================
+       CONTENT FOLD — 正文内容折叠（处理大篇幅文本）
+       ================================================================ */
+    .content-fold-container {
+      position: relative;
+    }
+    .content-fold-body {
+      position: relative;
+      overflow: hidden;
+      transition: max-height 0.45s cubic-bezier(0.25, 0.8, 0.25, 1.2);
+    }
+    /* 折叠态 */
+    .content-fold-collapsed .content-fold-body {
+      max-height: 240px;
+    }
+    /* 展开态 — 足够大的值让内容自然撑开 */
+    .content-fold-container:not(.content-fold-collapsed) .content-fold-body {
+      max-height: 25000px;
+    }
+    /* 折叠遮罩渐变 — 放在 body 内部，只覆盖文字不覆盖按钮 */
+    .content-fold-overlay {
+      display: none;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      pointer-events: none;
+      border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+      z-index: 1;
+    }
+    .content-fold-collapsed .content-fold-overlay {
+      display: block;
+    }
+    [data-theme="dark"] .content-fold-overlay {
+      background: linear-gradient(to bottom, transparent, #1a1c20 85%);
+    }
+    [data-theme="dark"] .think-section .fold-section:not(.user-fold) {
+      border-color: rgba(79,110,247,0.1);
+      box-shadow: 0 0 0 1px rgba(79,110,247,0.06);
+    }
+    [data-theme="light"] .content-fold-overlay {
+      background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.95) 85%);
+    }
+    .silk-bubble-row.bot .silk-bubble .content-fold-overlay {
+      background: linear-gradient(to bottom, transparent, #fff 85%);
+    }
+    [data-theme="dark"] .silk-bubble-row.bot .silk-bubble .content-fold-overlay {
+      background: linear-gradient(to bottom, transparent, #1a1c20 85%);
+    }
+    /* 折叠后的 md-content 与遮罩不重叠 */
+    .content-fold-body > .md-content {
+      position: relative;
+      z-index: 0;
+    }
+    /* 折叠后搜索资源与正文之间的分隔 */
+    .search-source + .content-fold-container {
+      border-top: 1px dashed var(--border-soft);
+      padding-top: 8px;
+    }
+    /* 折叠操作栏 */
+    .content-fold-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 0 2px;
+    }
+    .content-fold-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 14px;
+      min-height: 32px;
+      min-width: 44px;
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--accent);
+      background: var(--accent-glow);
+      border: 1px solid rgba(99,102,241,0.18);
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      -webkit-user-select: none;
+      user-select: none;
+      white-space: nowrap;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+    .content-fold-toggle-btn:hover {
+      background: rgba(99,102,241,0.2);
+      border-color: rgba(99,102,241,0.35);
+    }
+    .content-fold-toggle-btn:active {
+      background: rgba(99,102,241,0.3);
+    }
+    .content-fold-toggle-btn svg {
+      width: 11px;
+      height: 11px;
+      flex-shrink: 0;
+      transition: transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1.2);
+    }
+    .content-fold-collapsed .content-fold-toggle-btn svg {
+      transform: rotate(0deg);
+    }
+    .content-fold-container:not(.content-fold-collapsed) .content-fold-toggle-btn svg {
+      transform: rotate(180deg);
+    }
+    /* 折叠摘要提示 */
+    .content-fold-summary {
+      display: none;
+      font-size: 11px;
+      color: var(--fg-4);
+      padding: 0 2px;
+      text-align: center;
+    }
+    .content-fold-collapsed .content-fold-summary {
+      display: block;
+    }
+    /* 响应式：移动端增大触摸区域 */
+    @media (max-width: 640px) {
+      .content-fold-toggle-btn {
+        min-height: 44px;
+        padding: 8px 18px;
+        font-size: 12px;
+      }
+      .content-fold-collapsed .content-fold-body {
+        max-height: 180px;
+      }
+    }
+  </style>
+  <!-- Markdown 渲染: marked + highlight.js -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/14.1.0/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/sql.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">W</div>
+        <span class="logo-text">W_X_L_C</span>
+      </div>
+
+      <button class="btn-new-chat" id="btnNewChat">
+        <svg viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>
+        新建会话
+      </button>
+
+      <div class="history" id="history">
+        <div class="history-empty" id="historyEmpty">
+          <div class="he-icon">
+            <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M8 10h8M8 13.5h6M8 17h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="he-text">暂无历史记录</div>
+          <div class="he-hint">开始新会话后，记录将显示在这里</div>
+        </div>
+        <div id="historyList"></div>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="avatar">W</div>
+        <div class="user-info">
+          <div class="user-name">W_X_L_C</div>
+          <div class="user-role">Assistant</div>
+        </div>
+        <button class="btn-settings" title="设置">
+          <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.3 3.3l1.4 1.4M11.3 11.3l1.4 1.4M3.3 12.7l1.4-1.4M11.3 4.7l1.4-1.4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </aside>
+
+    <button class="sidebar-toggle" id="sidebarToggle" title="折叠/展开侧边栏">
+      <svg viewBox="0 0 14 14" fill="none"><path d="M9 3L5 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+
+    <!-- Main area -->
+    <main class="main">
+      <div class="main-topbar">
+        <div class="model-badge">
+          <span class="dot"></span>
+          <span id="topbarModel">deepseek-v4-pro</span>
+        </div>
+        <div class="topbar-actions">
+          <button id="btnToggleConfig" title="模型配置">
+            <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="1" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="9" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.3"/></svg>
+          </button>
+          <button id="btnTheme" title="切换主题">
+            <svg viewBox="0 0 16 16" fill="none" id="themeIcon"><circle cx="8" cy="8" r="3.5" stroke="currentColor" stroke-width="1.3"/><path d="M8 1.5v1.5M8 13v1.5M1.5 8H3M13 8h1.5M3.8 3.8l1 1M11.2 11.2l1 1M3.8 12.2l1-1M11.2 4.8l1-1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="chat-body" id="chatBody">
+        <div class="empty-state" id="emptyState">
+          <div class="empty-brand">
+            <span class="dot-live"></span>
+            W_X_L_C
+          </div>
+          <div class="empty-icon">
+            <svg viewBox="0 0 36 36" fill="none"><path d="M18 2L31 10V26L18 34L5 26V10L18 2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M18 12L26 17V23L18 28L10 23V17L18 12Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" opacity="0.5"/><circle cx="18" cy="18" r="3" fill="currentColor" opacity="0.7"/></svg>
+          </div>
+          <div class="empty-title">今天想做点什么？</div>
+          <div class="empty-sub">我可以帮你写代码、分析数据、搜索信息或回答各种问题</div>
+          <div class="suggestions">
+            <div class="suggestion-chip" data-prompt="帮我总结一份文档的关键要点">
+              <div class="sc-icon c1"><svg viewBox="0 0 16 16" fill="none"><rect x="3" y="2" width="10" height="12" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M6 5h4M6 7.5h3.5M6 10h2.5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></div>
+              <span>总结文档</span>
+            </div>
+            <div class="suggestion-chip" data-prompt="请分析并解释这段代码的逻辑">
+              <div class="sc-icon c2"><svg viewBox="0 0 16 16" fill="none"><path d="M5.5 4l-3 4 3 4M10.5 4l3 4-3 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span>分析代码</span>
+            </div>
+            <div class="suggestion-chip" data-prompt="请帮我生成一份产品方案框架">
+              <div class="sc-icon c3"><svg viewBox="0 0 16 16" fill="none"><rect x="1.5" y="1.5" width="5.5" height="5.5" rx="1.2" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="1.5" width="5.5" height="5.5" rx="1.2" stroke="currentColor" stroke-width="1.2"/><rect x="1.5" y="9" width="5.5" height="5.5" rx="1.2" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="9" width="5.5" height="5.5" rx="1.2" stroke="currentColor" stroke-width="1.2"/></svg></div>
+              <span>生成方案</span>
+            </div>
+            <div class="suggestion-chip" data-prompt="请帮我搜索并整理相关资料">
+              <div class="sc-icon c4"><svg viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.2"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+              <span>搜索信息</span>
+            </div>
+            <div class="suggestion-chip" data-prompt="请帮我写一份工作周报">
+              <div class="sc-icon c5"><svg viewBox="0 0 16 16" fill="none"><path d="M3 3h10v12H3z" stroke="currentColor" stroke-width="1.2"/><path d="M5.5 6.5h5M5.5 9h3.5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></div>
+              <span>写周报</span>
+            </div>
+            <div class="suggestion-chip" data-prompt="帮我翻译一段文本并解释语法">
+              <div class="sc-icon c6"><svg viewBox="0 0 16 16" fill="none"><path d="M2 5l3 3-3 3M8 2h5a1 1 0 011 1v10a1 1 0 01-1 1H8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span>翻译文本</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="input-area">
+        <div class="file-tags" id="fileTags"></div>
+        <div class="input-row">
+          <button class="btn-upload" id="btnUpload" title="上传文件">
+            <svg viewBox="0 0 18 18" fill="none"><path d="M9 12V3M9 3l-3 3M9 3l3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 12v2a1.5 1.5 0 001.5 1.5h9a1.5 1.5 0 001.5-1.5v-2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <textarea id="chatInput" rows="1" placeholder="输入消息，或描述你想完成的任务…"></textarea>
+          <button class="btn-send" id="btnSend" title="发送">
+            <span class="send-icon">
+              <svg viewBox="0 0 16 16" fill="none"><path d="M15.854.146a.5.5 0 0 1 .108.545l-5 13a.5.5 0 0 1-.904.032l-3.244-6.537L.277 3.942a.5.5 0 0 1 .077-.882l15-3a.5.5 0 0 1 .5.086z" fill="#fff"/></svg>
+            </span>
+            <span class="spinner"></span>
+          </button>
+        </div>
+        <div class="input-hint">AI 生成内容可能存在误差，请注意核实重要信息</div>
+      </div>
+    </main>
+
+    <!-- Config panel -->
+    <aside class="config-panel collapsed" id="configPanel">
+      <div class="config-header">
+        <h2>模型配置</h2>
+        <button class="btn-collapse" id="btnCollapseConfig" title="折叠面板">
+          <svg viewBox="0 0 14 14" fill="none"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+
+      <div class="config-body">
+        <div class="field">
+          <label class="field-label" for="provider">模型供应商</label>
+          <select id="provider">
+            <option value="openai">OpenAI</option>
+            <option value="anthropic">Anthropic</option>
+            <option value="google">Google</option>
+            <option value="deepseek">DeepSeek</option>
+            <option value="ollama">Ollama</option>
+            <option value="custom">自定义供应商</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="baseUrl">Base URL</label>
+          <input type="text" id="baseUrl" placeholder="https://api.example.com/v1" />
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="modelName">模型名称</label>
+          <input type="text" id="modelName" placeholder="例如 gpt-4.1、deepseek-chat" />
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="apiKey">API Key</label>
+          <div class="input-icon-wrap">
+            <input type="password" id="apiKey" placeholder="sk-..." />
+            <button class="toggle-vis" id="toggleKeyVis" title="查看/隐藏">
+              <svg viewBox="0 0 14 14" fill="none" id="eyeIcon"><path d="M1 7s2.5-4 6-4 6 4 6 4-2.5 4-6 4-6-4-6-4z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.2"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="accordion" id="advancedAccordion">
+          <button class="accordion-trigger" id="advancedToggle">
+            高级设置
+            <svg viewBox="0 0 12 12" fill="none"><path d="M3 4.5l3 3 3-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="accordion-body">
+            <div class="field">
+              <label class="field-label" for="temperature">Temperature</label>
+              <input type="text" id="temperature" placeholder="0.7" />
+            </div>
+            <div class="field">
+              <label class="field-label" for="maxTokens">Max Tokens</label>
+              <input type="text" id="maxTokens" placeholder="4096" />
+            </div>
+            <div class="field">
+              <label class="field-label" for="systemPrompt">System Prompt</label>
+              <textarea id="systemPrompt" rows="4" placeholder="You are a helpful assistant…"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="config-footer">
+        <div class="status-msg" id="statusMsg">
+          <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M4.5 7l2 2 3.5-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>连接正常</span>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" id="btnTest">测试连接</button>
+          <button class="btn btn-primary" id="btnSave">保存配置</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    (function () {
+      // ── Theme toggle ────────────────────────────────────────────
+      var html = document.documentElement;
+      var btnTheme = document.getElementById('btnTheme');
+      var themeIcon = document.getElementById('themeIcon');
+      var sunPath = '<circle cx="8" cy="8" r="3.5" stroke="currentColor" stroke-width="1.3"/><path d="M8 1.5v1.5M8 13v1.5M1.5 8H3M13 8h1.5M3.8 3.8l1 1M11.2 11.2l1 1M3.8 12.2l1-1M11.2 4.8l1-1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>';
+      var moonPath = '<path d="M13 8.5A6 6 0 017.5 3 6 6 0 1013 8.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>';
+      btnTheme.addEventListener('click', function () {
+        var isDark = html.getAttribute('data-theme') === 'dark';
+        html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+        themeIcon.innerHTML = isDark ? sunPath : moonPath;
+        try { localStorage.setItem('agent-studio-theme', isDark ? 'light' : 'dark'); } catch (_) {}
+      });
+      try {
+        var saved = localStorage.getItem('agent-studio-theme');
+        if (saved === 'light') {
+          html.setAttribute('data-theme', 'light');
+          themeIcon.innerHTML = sunPath;
+        }
+      } catch (_) {}
+
+      // ── Sidebar collapse ────────────────────────────────────────
+      var sidebar = document.getElementById('sidebar');
+      var sidebarToggle = document.getElementById('sidebarToggle');
+      sidebarToggle.addEventListener('click', function () {
+        sidebar.classList.toggle('collapsed');
+        try { localStorage.setItem('agent-studio-sidebar', sidebar.classList.contains('collapsed') ? '1' : '0'); } catch (_) {}
+      });
+      try { if (localStorage.getItem('agent-studio-sidebar') === '1') { sidebar.classList.remove('collapsed'); try { localStorage.removeItem('agent-studio-sidebar'); } catch(_){} } } catch (_) {}
+
+      // ── Config panel toggle ─────────────────────────────────────
+      var configPanel = document.getElementById('configPanel');
+      var btnToggleConfig = document.getElementById('btnToggleConfig');
+      var btnCollapseConfig = document.getElementById('btnCollapseConfig');
+      btnToggleConfig.addEventListener('click', function () { configPanel.classList.toggle('collapsed'); });
+      btnCollapseConfig.addEventListener('click', function () { configPanel.classList.add('collapsed'); });
+
+      function escapeHtml(text) {
+        var div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      function scrollToBottom() {
+        var body = document.getElementById('chatBody');
+        if (body) body.scrollTop = body.scrollHeight;
+      }
+
+      // ── API key visibility ──────────────────────────────────────
+      var apiKey = document.getElementById('apiKey');
+      var toggleKeyVis = document.getElementById('toggleKeyVis');
+      var eyeIcon = document.getElementById('eyeIcon');
+      var eyeOpen = '<path d="M1 7s2.5-4 6-4 6 4 6 4-2.5 4-6 4-6-4-6-4z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.2"/>';
+      var eyeClosed = '<path d="M1 7s2.5-4 6-4 6 4 6 4-2.5 4-6 4-6-4-6-4z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M2 12L12 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>';
+      toggleKeyVis.addEventListener('click', function () {
+        var isPass = apiKey.type === 'password';
+        apiKey.type = isPass ? 'text' : 'password';
+        eyeIcon.innerHTML = isPass ? eyeClosed : eyeOpen;
+      });
+
+      // ── Advanced accordion ──────────────────────────────────────
+      var accordion = document.getElementById('advancedAccordion');
+      var advancedToggle = document.getElementById('advancedToggle');
+      advancedToggle.addEventListener('click', function () { accordion.classList.toggle('open'); });
+
+      // ── Test connection ─────────────────────────────────────────
+      var btnTest = document.getElementById('btnTest');
+      var statusMsg = document.getElementById('statusMsg');
+      btnTest.addEventListener('click', async function () {
+        btnTest.textContent = '测试中…';
+        btnTest.disabled = true;
+        statusMsg.classList.remove('success');
+        try {
+          var response = await fetch(API_BASE_URL + '/health');
+          if (response.ok) {
+            var data = await response.json();
+            statusMsg.querySelector('span').textContent = '连接正常: ' + data.model;
+            statusMsg.classList.add('success');
+          } else {
+            statusMsg.querySelector('span').textContent = '连接失败: ' + response.status;
+            statusMsg.style.color = '#ef4444';
+            statusMsg.style.display = 'flex';
+          }
+        } catch (e) {
+          statusMsg.querySelector('span').textContent = '连接失败: ' + e.message;
+          statusMsg.style.color = '#ef4444';
+          statusMsg.style.display = 'flex';
+        }
+        btnTest.textContent = '测试连接';
+        btnTest.disabled = false;
+        setTimeout(function () { statusMsg.classList.remove('success'); statusMsg.style.color = ''; statusMsg.style.display = ''; }, 4000);
+      });
+
+      var API_BASE_URL = 'http://localhost:8001';
+
+      async function loadModelConfig() {
+        try {
+          var response = await fetch(API_BASE_URL + '/config/model');
+          var data = await response.json();
+          if (data.temperature !== undefined) document.getElementById('temperature').value = data.temperature;
+          if (data.mimo_model) document.getElementById('modelName').value = data.mimo_model;
+          else if (data.model_name) document.getElementById('modelName').value = data.model_name;
+          if (data.openai_base_url) document.getElementById('baseUrl').value = data.openai_base_url;
+          if (data.openai_api_key) document.getElementById('apiKey').value = data.openai_api_key;
+          if (data.system_prompt) document.getElementById('systemPrompt').value = data.system_prompt;
+          var displayModel = data.mimo_model || data.model_name || 'deepseek-v4-pro';
+          document.getElementById('topbarModel').textContent = displayModel;
+          var providerSelect = document.getElementById('provider');
+          if (data.model_name === 'mimo' || data.model_name === 'openai') {
+            providerSelect.value = 'openai';
+          } else if (data.model_name === 'deepseek') {
+            providerSelect.value = 'deepseek';
+          }
+        } catch (e) {
+          console.error('加载配置失败:', e);
+        }
+      }
+
+      var btnSave = document.getElementById('btnSave');
+      btnSave.addEventListener('click', async function () {
+        var temperature = parseFloat(document.getElementById('temperature').value);
+        var modelName = document.getElementById('modelName').value;
+        var systemPrompt = document.getElementById('systemPrompt').value;
+
+        try {
+          var response = await fetch(API_BASE_URL + '/config/model', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ temperature: temperature, model_name: modelName, system_prompt: systemPrompt })
+          });
+          var data = await response.json();
+          if (data.success) {
+            document.getElementById('topbarModel').textContent = modelName || 'mimo';
+            statusMsg.classList.add('success');
+            statusMsg.querySelector('span').textContent = '配置保存成功';
+            setTimeout(function () { statusMsg.classList.remove('success'); }, 4000);
+          }
+        } catch (e) {
+          console.error('保存配置失败:', e);
+        }
+      });
+
+      window.addEventListener('load', loadModelConfig);
+
+      // ── Chat input ──────────────────────────────────────────────
+      var chatInput = document.getElementById('chatInput');
+      var btnSend = document.getElementById('btnSend');
+
+      function quoteMessage(text) {
+        var quoted = '\n> ' + text.replace(/\n/g, '\n> ') + '\n\n';
+        chatInput.value += quoted;
+        chatInput.focus();
+        chatInput.dispatchEvent(new Event('input'));
+        chatInput.scrollTop = chatInput.scrollHeight;
+      }
+
+      function createQuoteBtn(content, actionsWrap) {
+        var quoteBtn = document.createElement('button');
+        quoteBtn.className = 'quote-btn';
+        quoteBtn.title = '引用此内容';
+        quoteBtn.innerHTML = '<svg viewBox="0 0 14 14" fill="none"><path d="M3 3h3v5H4.5c-.8 0-1.5.7-1.5 1.5V11M11 3H8v5h1.5c.8 0 1.5.7 1.5 1.5V11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+        quoteBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          quoteBtn.classList.add('cited');
+          setTimeout(function () { quoteBtn.classList.remove('cited'); }, 1200);
+          quoteMessage(content);
+        });
+        actionsWrap.appendChild(quoteBtn);
+      }
+
+      // ── Export helpers ──────────────────────────────────────────
+      function downloadBlob(content, filename, mime) {
+        var blob = new Blob([content], { type: mime + ';charset=utf-8' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      function htmlEscape(s) {
+        return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+      }
+
+      function exportAsMarkdown(content) {
+        downloadBlob(content, 'agent-export.md', 'text/markdown');
+      }
+
+      function exportAsHtml(content) {
+        var html = '<!DOCTYPE html>\n<html lang="zh-CN">\n<head>\n<meta charset="utf-8">\n'
+          + '<meta name="viewport" content="width=device-width,initial-scale=1">\n'
+          + '<title>Agent Studio Export</title>\n'
+          + '<style>body{max-width:720px;margin:40px auto;padding:0 24px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;'
+          + 'font-size:15px;line-height:1.75;color:#1e1e2e;background:#fff;white-space:pre-wrap;word-wrap:break-word}</style>\n</head>\n<body>\n'
+          + htmlEscape(content) + '\n</body>\n</html>';
+        downloadBlob(html, 'agent-export.html', 'text/html');
+      }
+
+      function exportAsText(content) {
+        downloadBlob(content, 'agent-export.txt', 'text/plain');
+      }
+
+      function exportAsJson(content) {
+        var obj = {
+          exportedAt: new Date().toISOString(),
+          content: content
+        };
+        downloadBlob(JSON.stringify(obj, null, 2), 'agent-export.json', 'application/json');
+      }
+
+      async function exportAsDocx(content) {
+        try {
+          var resp = await fetch(API_BASE_URL + '/export/docx', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ content: content, filename: 'agent-export' })
+          });
+          if (!resp.ok) throw new Error('导出失败');
+          var blob = await resp.blob();
+          var url = URL.createObjectURL(blob);
+          var a = document.createElement('a');
+          a.href = url;
+          a.download = 'agent-export.docx';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        } catch (e) {
+          alert('DOCX 导出失败: ' + e.message);
+        }
+      }
+
+      function exportAsPdf(content) {
+        var html = '<!DOCTYPE html>\n<html lang="zh-CN">\n<head>\n<meta charset="utf-8">\n'
+          + '<meta name="viewport" content="width=device-width,initial-scale=1">\n'
+          + '<title>Agent Studio Export</title>\n'
+          + '<style>'
+          + '@page{size:A4;margin:2cm}'
+          + 'body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Microsoft YaHei",sans-serif;'
+          + 'font-size:12pt;line-height:1.8;color:#1e1e2e;white-space:pre-wrap;word-wrap:break-word;max-width:100%}'
+          + 'h1{font-size:18pt;margin:16pt 0 8pt}h2{font-size:15pt;margin:14pt 0 6pt}h3{font-size:13pt;margin:12pt 0 4pt}'
+          + 'code{background:#f5f5f5;padding:1px 4px;border-radius:3px;font-size:10pt}'
+          + 'pre{background:#f5f5f5;padding:12px;border-radius:6px;font-size:10pt;overflow-x:auto}'
+          + '</style>\n</head>\n<body>\n'
+          + content.split('\n').map(function(l){return '<p style="margin:4px 0">'+htmlEscape(l)+'</p>';}).join('\n')
+          + '\n</body>\n</html>';
+        var w = window.open('', '_blank', 'width=800,height=600');
+        w.document.write(html);
+        w.document.close();
+        w.onload = function () { w.print(); };
+      }
+
+      var openDropdown = null;
+
+      function closeExportDropdown() {
+        if (openDropdown) {
+          openDropdown.classList.remove('show');
+          openDropdown = null;
+        }
+      }
+
+      document.addEventListener('click', function (e) {
+        if (openDropdown && !openDropdown.parentElement.contains(e.target)) {
+          closeExportDropdown();
+        }
+      });
+
+      function createExportBtn(content, actionsWrap) {
+        var exportBtn = document.createElement('button');
+        exportBtn.className = 'export-btn';
+        exportBtn.title = '导出文档';
+        exportBtn.innerHTML = '<svg viewBox="0 0 14 14" fill="none"><path d="M7 1v8M4 6l3 3 3-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 10v1.5a1 1 0 001 1h8a1 1 0 001-1V10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>';
+
+        var dropdown = document.createElement('div');
+        dropdown.className = 'export-dropdown';
+
+        var formats = [
+          { label: 'Markdown',  ext: '.md',   icon: '<path d="M2 4h10M2 7h10M2 10h6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>', download: exportAsMarkdown },
+          { label: '纯文本',     ext: '.txt',  icon: '<path d="M3 4h8M3 7h8M3 10h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>', download: exportAsText },
+          { label: 'Word 文档',  ext: '.docx', icon: '<rect x="2" y="1" width="10" height="12" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M5 4h6M5 7h5M5 10h3" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>', download: exportAsDocx },
+          { label: 'PDF',        ext: '.pdf',  icon: '<path d="M3 2h5l4 4v8a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="currentColor" stroke-width="1.2"/><path d="M8 2v4h4" stroke="currentColor" stroke-width="1.2"/><path d="M5 8h4M5 10h3" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>', download: exportAsPdf }
+        ];
+
+        for (var j = 0; j < formats.length; j++) (function (f) {
+          var item = document.createElement('button');
+          item.className = 'export-dropdown-item';
+          item.innerHTML = '<span class="ed-icon"><svg viewBox="0 0 14 14" fill="none">' + f.icon + '</svg></span><span class="ed-label">' + f.label + '</span><span class="ed-ext">' + f.ext + '</span>';
+          item.addEventListener('click', function (e) {
+            e.stopPropagation();
+            f.download(content);
+            closeExportDropdown();
+          });
+          dropdown.appendChild(item);
+        })(formats[j]);
+
+        exportBtn.appendChild(dropdown);
+
+        exportBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          if (dropdown.classList.contains('show')) {
+            closeExportDropdown();
+          } else {
+            closeExportDropdown();
+            dropdown.classList.add('show');
+            openDropdown = dropdown;
+          }
+        });
+
+        actionsWrap.appendChild(exportBtn);
+      }
+
+      btnSend.addEventListener('click', sendMessage);
+      chatInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          sendMessage();
+        }
+      });
+
+      chatInput.addEventListener('input', function () {
+        this.style.height = 'auto';
+        this.style.height = Math.min(this.scrollHeight, 160) + 'px';
+      });
+
+      // ── File upload ─────────────────────────────────────────────
+      var btnUpload = document.getElementById('btnUpload');
+      var fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.style.display = 'none';
+      fileInput.multiple = true;
+      fileInput.accept = '.pdf,.txt,.docx,.xlsx,.csv,.md';
+      fileInput.setAttribute('aria-label', '上传文件');
+      btnUpload.parentNode.appendChild(fileInput);
+
+      var fileTags = document.getElementById('fileTags');
+      var pendingFiles = [];  // 存储 File 对象，不只是文件名
+      btnUpload.addEventListener('click', function () { fileInput.click(); });
+      fileInput.addEventListener('change', function (e) {
+        var selectedFiles = Array.from(e.target.files);
+        if (selectedFiles.length > 0) {
+          pendingFiles = pendingFiles.concat(selectedFiles);
+          renderFileTags();
+        }
+        fileInput.value = '';
+      });
+      function renderFileTags() {
+        fileTags.className = 'file-tags' + (pendingFiles.length ? ' has-files' : '');
+        fileTags.innerHTML = pendingFiles.map(function (f, i) {
+          return '<div class="file-tag">' +
+            '<span class="ft-icon"><svg viewBox="0 0 13 13" fill="none"><rect x="2" y="1" width="9" height="11" rx="1.5" stroke="currentColor" stroke-width="1.1"/><path d="M4.5 4h4M4.5 6.5h4M4.5 9h2" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg></span>' +
+            '<span class="ft-name">' + escapeHtml(f.name) + '</span>' +
+            '<button class="ft-remove" data-idx="' + i + '"><svg viewBox="0 0 10 10" fill="none"><path d="M2 2l6 6M8 2l-6 6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></button>' +
+            '</div>';
+        }).join('');
+      }
+      fileTags.addEventListener('click', function (e) {
+        var btn = e.target.closest('.ft-remove');
+        if (btn) {
+          pendingFiles.splice(parseInt(btn.dataset.idx), 1);
+          renderFileTags();
+        }
+      });
+
+      // 读取文件内容（文本型文件）
+      async function readFilesContents() {
+        if (!pendingFiles.length) return [];
+        var results = [];
+        for (var i = 0; i < pendingFiles.length; i++) {
+          var f = pendingFiles[i];
+          try {
+            var text = await f.text();
+            results.push({ name: f.name, type: f.type, content: text });
+          } catch (_) {
+            results.push({ name: f.name, type: f.type, content: '[无法读取此文件]' });
+          }
+        }
+        return results;
+      }
+
+      // ── Suggestion cards ────────────────────────────────────────
+      var emptyState = document.getElementById('emptyState');
+      document.querySelectorAll('.suggestion-chip').forEach(function (card) {
+        card.addEventListener('click', function () {
+          chatInput.value = card.dataset.prompt;
+          chatInput.focus();
+          chatInput.dispatchEvent(new Event('input'));
+        });
+      });
+
+      // ── Conversation state ──────────────────────────────────────
+      var conversationMessages = [];
+      var currentSessionId = null;
+      var isLoadedFromHistory = false;  // 标记是否从历史加载（避免新消息误清 session）
+
+      // 从 localStorage 恢复 session_id（刷新页面后保持记忆）
+      try {
+        var savedSessionId = localStorage.getItem('agent-studio-session-id');
+        if (savedSessionId && savedSessionId.startsWith('sess-')) {
+          currentSessionId = savedSessionId;
+        }
+      } catch (_) {}
+
+      function getSessionId() {
+        if (!currentSessionId) {
+          currentSessionId = 'sess-' + Date.now() + '-' + Math.random().toString(36).substring(2, 8);
+          // 保存到 localStorage，刷新页面后保持同一会话
+          try { localStorage.setItem('agent-studio-session-id', currentSessionId); } catch (_) {}
+        }
+        return currentSessionId;
+      }
+
+      function addMessage(content, isUser) {
+        var chatBody = document.getElementById('chatBody');
+        emptyState.style.display = 'none';
+        chatBody.classList.add('has-messages');
+        
+        conversationMessages.push({ content: content, isUser: isUser, time: Date.now() });
+
+        var row = document.createElement('div');
+        row.className = 'silk-bubble-row ' + (isUser ? 'user' : 'bot');
+        
+        var avatar = document.createElement('div');
+        avatar.className = 'silk-avatar';
+        if (isUser) {
+          avatar.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5.5" r="2.5" fill="currentColor"/><path d="M3 13.5c0-2.5 2.2-4.5 5-4.5s5 2 5 4.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>';
+        } else {
+          avatar.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="2" stroke="currentColor" stroke-width="1.2"/><circle cx="6" cy="7.5" r="1.2" fill="currentColor"/><circle cx="10" cy="7.5" r="1.2" fill="currentColor"/><path d="M6 10.5c.6.5 1.3.8 2 .8s1.4-.3 2-.8" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/><path d="M5 3V2a1 1 0 011-1h4a1 1 0 011 1v1" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>';
+        }
+
+        var bubble = document.createElement('div');
+        bubble.className = 'silk-bubble';
+
+        renderIntoBubble(bubble, content, isUser);
+
+        if (!isUser) {
+          var actionsWrap = document.createElement('div');
+          actionsWrap.className = 'message-actions visible';
+          var copyBtn = document.createElement('button');
+          copyBtn.className = 'copy-btn';
+          copyBtn.title = '复制内容';
+          copyBtn.innerHTML = '<svg viewBox="0 0 14 14" fill="none"><rect x="3" y="3" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M11 3v8a1 1 0 01-1 1H3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>';
+          copyBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            navigator.clipboard.writeText(content).then(function () {
+              copyBtn.classList.add('copied');
+              copyBtn.innerHTML = '<svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+              setTimeout(function () {
+                copyBtn.classList.remove('copied');
+                copyBtn.innerHTML = '<svg viewBox="0 0 14 14" fill="none"><rect x="3" y="3" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M11 3v8a1 1 0 01-1 1H3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>';
+              }, 2000);
+            });
+          });
+          actionsWrap.appendChild(copyBtn);
+          createQuoteBtn(content, actionsWrap);
+          createExportBtn(content, actionsWrap);
+          bubble.appendChild(actionsWrap);
+        }
+
+        var time = document.createElement('div');
+        time.className = 'message-time';
+        time.textContent = new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+
+        var col = document.createElement('div');
+        col.style.display = 'flex';
+        col.style.flexDirection = 'column';
+        col.style.gap = '4px';
+        col.appendChild(bubble);
+        col.appendChild(time);
+
+        if (isUser) {
+          col.style.flex = '0 0 auto';
+          col.style.maxWidth = '55%';
+          col.style.minWidth = '0';
+          col.style.alignItems = 'flex-end';
+          row.appendChild(col);
+          row.appendChild(avatar);
+        } else {
+          col.style.flex = '1';
+          col.style.minWidth = '0';
+          row.appendChild(avatar);
+          row.appendChild(col);
+        }
+        chatBody.appendChild(row);
+        chatBody.scrollTop = chatBody.scrollHeight;
+        // 机器人消息大篇幅自动折叠
+        if (!isUser) {
+          applyContentFold(row, content);
+        }
+        return row;
+      }
+
+      function addTypingIndicator() {
+        var chatBody = document.getElementById('chatBody');
+        var row = document.createElement('div');
+        row.className = 'silk-bubble-row bot';
+        row.id = 'typingIndicator';
+        
+        var avatar = document.createElement('div');
+        avatar.className = 'silk-avatar';
+        avatar.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="2" stroke="currentColor" stroke-width="1.2"/><circle cx="6" cy="7.5" r="1.2" fill="currentColor"/><circle cx="10" cy="7.5" r="1.2" fill="currentColor"/><path d="M6 10.5c.6.5 1.3.8 2 .8s1.4-.3 2-.8" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/><path d="M5 3V2a1 1 0 011-1h4a1 1 0 011 1v1" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>';
+        
+        var bubble = document.createElement('div');
+        bubble.className = 'silk-bubble';
+        
+        var indicator = document.createElement('div');
+        indicator.className = 'typing-indicator';
+        indicator.innerHTML = '<span class="typing-dots-wrap"><span class="typing-dots"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></span></span><span class="typing-label">Agent 思考中…</span>';
+        
+        bubble.appendChild(indicator);
+        row.appendChild(avatar);
+        row.appendChild(bubble);
+        chatBody.appendChild(row);
+        chatBody.scrollTop = chatBody.scrollHeight;
+      }
+
+      function removeTypingIndicator() {
+        var indicator = document.getElementById('typingIndicator');
+        if (indicator) indicator.remove();
+      }
+
+      // ── History tracking ─────────────────────────────────────────
+      var STORAGE_KEY = 'agent-studio-history';
+      var MAX_HISTORY_ENTRIES = 50;
+      var MAX_MSGS_PER_CONV = 200;
+      var historyCount = 0;
+      var currentHistoryId = null;
+      var historyData = {};
+      var historyEmpty = document.getElementById('historyEmpty');
+      var historyList = document.getElementById('historyList');
+      var historyItemsWrap = document.createElement('div');
+      historyItemsWrap.id = 'historyItemsWrap';
+      historyList.appendChild(historyItemsWrap);
+
+      function saveHistory() {
+        try {
+          var ids = Object.keys(historyData);
+          if (ids.length > MAX_HISTORY_ENTRIES) {
+            ids.sort(function (a, b) {
+              var na = parseInt(a.replace('hist-', '')) || 0;
+              var nb = parseInt(b.replace('hist-', '')) || 0;
+              return na - nb;
+            });
+            for (var i = 0; i < ids.length - MAX_HISTORY_ENTRIES; i++) {
+              delete historyData[ids[i]];
+              var el = historyItemsWrap.querySelector('.history-item[data-id="' + ids[i] + '"]');
+              if (el) el.remove();
+            }
+            updateHistoryEmpty();
+          }
+          var data = { count: historyCount, entries: historyData };
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        } catch (_) {}
+      }
+
+      function loadHistoryFromStorage() {
+        try {
+          var raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) { updateHistoryEmpty(); return; }
+          var data = JSON.parse(raw);
+          historyCount = data.count || 0;
+          historyData = data.entries || {};
+          var ids = Object.keys(historyData);
+          if (ids.length === 0) { updateHistoryEmpty(); return; }
+          ids.sort(function (a, b) {
+            var na = parseInt(a.replace('hist-', '')) || 0;
+            var nb = parseInt(b.replace('hist-', '')) || 0;
+            return na - nb;
+          });
+          if (ids.length > MAX_HISTORY_ENTRIES) {
+            for (var i = 0; i < ids.length - MAX_HISTORY_ENTRIES; i++) {
+              delete historyData[ids[i]];
+            }
+            saveHistory();
+            ids = ids.slice(ids.length - MAX_HISTORY_ENTRIES);
+          }
+          var labelDiv = document.createElement('div');
+          labelDiv.className = 'history-group-label';
+          labelDiv.textContent = '今天';
+          historyItemsWrap.appendChild(labelDiv);
+          for (var i = 0; i < ids.length; i++) {
+            var entry = historyData[ids[i]];
+            renderHistoryItem(ids[i], entry.message, entry.time);
+          }
+          updateHistoryEmpty();
+        } catch (_) { historyCount = 0; historyData = {}; updateHistoryEmpty(); }
+      }
+
+      function updateHistoryEmpty() {
+        var items = historyItemsWrap.querySelectorAll('.history-item');
+        if (items.length === 0) {
+          historyEmpty.style.display = 'flex';
+          while (historyItemsWrap.firstChild) { historyItemsWrap.removeChild(historyItemsWrap.firstChild); }
+        } else { historyEmpty.style.display = 'none'; }
+      }
+
+      function renderHistoryItem(id, message, ts) {
+        var shortMsg = message.length > 30 ? message.substring(0, 30) + '…' : message;
+        var timeStr = ts ? formatHistoryTime(ts) : '';
+        var item = document.createElement('div');
+        item.className = 'history-item';
+        item.dataset.id = id;
+        item.title = message;
+        item.innerHTML =
+          '<div class="h-icon"><svg viewBox="0 0 13 13" fill="none"><rect x="1.5" y="2" width="10" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4 5.5h5M4 7.5h3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></div>' +
+          '<span class="title">' + escapeHtml(shortMsg) + '</span>' +
+          '<div class="actions"><button class="btn-delete-hist" title="删除"><svg viewBox="0 0 13 13" fill="none"><path d="M2 3.5h9M5 3.5V2.5a1 1 0 011-1h1a1 1 0 011 1v1M4 5v5.5M6.5 5v5.5M9 5v5.5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>' +
+          (timeStr ? '<div class="h-time">' + timeStr + '</div>' : '');
+        item.addEventListener('click', function (e) { if (e.target.closest('.actions')) return; loadHistory(this); });
+        historyItemsWrap.appendChild(item);
+        return item;
+      }
+
+      function formatHistoryTime(ts) {
+        var d = new Date(ts), now = new Date();
+        var h = String(d.getHours()).padStart(2, '0'), m = String(d.getMinutes()).padStart(2, '0');
+        if (d.toDateString() === now.toDateString()) return '今天 ' + h + ':' + m;
+        var y = new Date(now); y.setDate(y.getDate() - 1);
+        if (d.toDateString() === y.toDateString()) return '昨天 ' + h + ':' + m;
+        return (d.getMonth() + 1) + '/' + d.getDate() + ' ' + h + ':' + m;
+      }
+
+      function addHistoryEntry(message) {
+        if (!historyItemsWrap.querySelector('.history-group-label')) {
+          var labelDiv = document.createElement('div');
+          labelDiv.className = 'history-group-label';
+          labelDiv.textContent = '今天';
+          historyItemsWrap.appendChild(labelDiv);
+        }
+        historyCount++;
+        var id = 'hist-' + historyCount;
+        currentHistoryId = id;
+        var now = Date.now();
+        historyData[id] = { message: message, time: now, messages: conversationMessages.slice() };
+        renderHistoryItem(id, message, now);
+        updateHistoryEmpty();
+        saveHistory();
+      }
+
+      historyItemsWrap.addEventListener('click', function (e) {
+        var btn = e.target.closest('.btn-delete-hist');
+        if (!btn) return;
+        e.stopPropagation();
+        var item = btn.closest('.history-item');
+        if (!item) return;
+        var id = item.dataset.id;
+        delete historyData[id];
+        item.remove();
+        var prev = item.previousElementSibling;
+        if (prev && prev.classList.contains('history-group-label')) {
+          var next = item.nextElementSibling;
+          if (!next || next.classList.contains('history-group-label')) prev.remove();
+        }
+        updateHistoryEmpty();
+        saveHistory();
+      });
+
+      function loadHistory(el) {
+        var id = el.dataset.id;
+        var entry = historyData[id];
+        if (!entry) return;
+        currentHistoryId = id;
+        isLoadedFromHistory = true;  // 标记：用户主动加载的历史记录
+        currentSessionId = null;  // 加载历史时重置会话，避免新旧上下文混淆
+        try { localStorage.removeItem('agent-studio-session-id'); } catch (_) {}
+        conversationMessages = (entry.messages || []).slice();
+        var chatBody = document.getElementById('chatBody');
+        chatBody.innerHTML = '';
+        chatBody.appendChild(emptyState);
+        emptyState.style.display = conversationMessages.length ? 'none' : 'block';
+        if (conversationMessages.length) chatBody.classList.add('has-messages');
+        else chatBody.classList.remove('has-messages');
+        for (var i = 0; i < conversationMessages.length; i++) {
+          var msg = conversationMessages[i];
+          addBubbleToChat(msg.content, msg.isUser, msg.time || Date.now());
+        }
+        chatBody.scrollTop = chatBody.scrollHeight;
+        // 历史消息大篇幅自动折叠
+        reapplyAllContentFolds();
+        var all = historyItemsWrap.querySelectorAll('.history-item');
+        for (var i = 0; i < all.length; i++) all[i].classList.remove('active');
+        el.classList.add('active');
+      }
+
+      // ── Markdown 渲染 ────────────────────────────────────────────
+      function renderMarkdown(text) {
+        if (!text) return '';
+        if (typeof marked === 'undefined') return htmlEscape(text).replace(/\n/g, '<br>');
+        try {
+          marked.setOptions({ breaks: true, gfm: true });
+          var html = marked.parse(text);
+          return html;
+        } catch (e) {
+          return htmlEscape(text).replace(/\n/g, '<br>');
+        }
+      }
+
+      // 将渲染后的内容注入到气泡 p 元素中
+      function renderIntoBubble(bubbleEl, content, isUser) {
+        var existingContent = bubbleEl.querySelector('.md-content');
+        var existingP = bubbleEl.querySelector('p');
+        
+        if (isUser) {
+          // 用户消息保持纯文本
+          var p = existingP || document.createElement('p');
+          p.textContent = content;
+          if (!existingP) bubbleEl.appendChild(p);
+          return;
+        }
+
+        // AI 消息: 检测是否包含 Markdown 语法
+        var hasMd = /^#{1,4}\s|```|[*_]{1,2}|^\s*[-*+]\s|^\s*\d+\.\s|\[.*\]\(.*\)|^\s*>\s|^\s*\|/m.test(content);
+
+        if (hasMd || content.length > 200) {
+          // 使用 Markdown 渲染
+          if (existingContent) existingContent.remove();
+          if (existingP) existingP.remove();
+
+          var mdDiv = document.createElement('div');
+          mdDiv.className = 'md-content';
+          mdDiv.innerHTML = renderMarkdown(content);
+          bubbleEl.appendChild(mdDiv);
+        } else {
+          // 短文本无 Markdown 特征，使用纯文本
+          if (existingContent) existingContent.remove();
+          var p = existingP || document.createElement('p');
+          p.textContent = content;
+          if (!existingP) bubbleEl.appendChild(p);
+        }
+      }
+
+      function addBubbleToChat(content, isUser, ts) {
+        var chatBody = document.getElementById('chatBody');
+        var row = document.createElement('div');
+        row.className = 'silk-bubble-row ' + (isUser ? 'user' : 'bot');
+        var avatar = document.createElement('div');
+        avatar.className = 'silk-avatar';
+        if (isUser) {
+          avatar.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5.5" r="2.5" fill="currentColor"/><path d="M3 13.5c0-2.5 2.2-4.5 5-4.5s5 2 5 4.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>';
+        } else {
+          avatar.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="2" stroke="currentColor" stroke-width="1.2"/><circle cx="6" cy="7.5" r="1.2" fill="currentColor"/><circle cx="10" cy="7.5" r="1.2" fill="currentColor"/><path d="M6 10.5c.6.5 1.3.8 2 .8s1.4-.3 2-.8" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/><path d="M5 3V2a1 1 0 011-1h4a1 1 0 011 1v1" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>';
+        }
+        var bubble = document.createElement('div');
+        bubble.className = 'silk-bubble';
+        renderIntoBubble(bubble, content, isUser);
+        if (!isUser) {
+          var actionsWrap = document.createElement('div');
+          actionsWrap.className = 'message-actions visible';
+          var copyBtn = document.createElement('button');
+          copyBtn.className = 'copy-btn';
+          copyBtn.title = '复制';
+          copyBtn.innerHTML = '<svg viewBox="0 0 14 14" fill="none"><rect x="3" y="3" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M11 3v8a1 1 0 01-1 1H3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>';
+          copyBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            navigator.clipboard.writeText(content).then(function () {
+              copyBtn.classList.add('copied');
+              copyBtn.innerHTML = '<svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+              setTimeout(function () { copyBtn.classList.remove('copied'); copyBtn.innerHTML = '<svg viewBox="0 0 14 14" fill="none"><rect x="3" y="3" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M11 3v8a1 1 0 01-1 1H3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>'; }, 2000);
+            });
+          });
+          actionsWrap.appendChild(copyBtn);
+          createQuoteBtn(content, actionsWrap);
+          createExportBtn(content, actionsWrap);
+          bubble.appendChild(actionsWrap);
+        }
+        var time = document.createElement('div');
+        time.className = 'message-time';
+        time.textContent = new Date(ts).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+        var col = document.createElement('div');
+        col.style.display = 'flex';
+        col.style.flexDirection = 'column';
+        col.style.gap = '4px';
+        col.appendChild(bubble);
+        col.appendChild(time);
+        if (isUser) {
+          col.style.flex = '0 0 auto';
+          col.style.maxWidth = '55%';
+          col.style.minWidth = '0';
+          col.style.alignItems = 'flex-end';
+          row.appendChild(col);
+          row.appendChild(avatar);
+        } else {
+          col.style.flex = '1';
+          col.style.minWidth = '0';
+          row.appendChild(avatar);
+          row.appendChild(col);
+        }
+        chatBody.appendChild(row);
+      }
+
+      loadHistoryFromStorage();
+
+      // ── 思考链渲染 ──
+      var NODE_LABELS = { decompose: '分解', reason: '推理', tools: '工具', validate: '校验', fix: '修复', summary: '总结' };
+      var NODE_ORDER = ['decompose', 'reason', 'tools', 'validate', 'fix', 'summary'];
+      var thinkRevealTimers = {}; // 每个 responseRow 的流式展开定时器
+
+      var thinkQueue = [];
+      var thinkQueueTimer = null;
+      var _currentThinkRow = null;
+      var _thinkingFinished = false;
+
+      function processThinkQueue() {
+        if (thinkQueue.length === 0) {
+          thinkQueueTimer = null;
+          // 队列全部渲染完毕，自动折叠
+          if (_currentThinkRow && _thinkingFinished) {
+            finishThinkSection(_currentThinkRow);
+          }
+          return;
+        }
+        var item = thinkQueue.shift();
+        addThinkNode(item.row, item.type, item.text);
+        scrollToBottom();
+        thinkQueueTimer = setTimeout(processThinkQueue, 400);
+      }
+
+      function enqueueThinkNode(row, type, text) {
+        _currentThinkRow = row;
+        thinkQueue.push({ row: row, type: type, text: text });
+        if (!thinkQueueTimer) processThinkQueue();
+      }
+
+      function ensureThinkSection(responseRow) {
+        var existing = responseRow.querySelector('.think-section');
+        if (existing) return existing;
+        var bubble = responseRow.querySelector('.silk-bubble');
+        if (!bubble) return null;
+        var sec = document.createElement('div');
+        sec.className = 'think-section';
+        sec.innerHTML = '<div class="fold-section">' +
+          '<div class="fold-section-header" onclick="this.parentElement.classList.toggle(\'user-fold\')">' +
+            '<svg class="fold-chevron" viewBox="0 0 14 14" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' +
+            '<svg class="fold-icon" viewBox="0 0 14 14" fill="none"><path d="M7 1.5a6 6 0 001.5.5M7 1.5A6 6 0 015.5 2M7 1.5V4m5 3.5a6 6 0 00-.5 1.5M12.5 7A6 6 0 0112 5.5M12.5 7h-2.5M7 12.5a6 6 0 01-1.5-.5M7 12.5V10M1.5 7a6 6 0 01.5-1.5M1.5 7h2.5M5.5 12A6 6 0 017 12.5m1.5-.5A6 6 0 0010 10" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>' +
+            '<span>思考过程</span>' +
+            '<span class="fold-status"></span>' +
+          '</div>' +
+          '<div class="fold-section-body"><div class="think-pipeline"></div></div>' +
+        '</div>';
+        var mdContent = bubble.querySelector('.md-content');
+        if (mdContent) {
+          bubble.insertBefore(sec, mdContent);
+        } else {
+          bubble.appendChild(sec);
+        }
+        return sec;
+      }
+
+      function addThinkNode(responseRow, type, text) {
+        var sec = ensureThinkSection(responseRow);
+        var pipeline = sec.querySelector('.think-pipeline');
+        if (!pipeline) return;
+        var oldActive = pipeline.querySelector('.think-node.active');
+        if (oldActive) { oldActive.classList.remove('active'); oldActive.classList.add('done'); }
+        var existingNode = pipeline.querySelector('.think-node.' + type);
+        if (existingNode) {
+          setTimeout(function () {
+            existingNode.classList.remove('done', 'pending');
+            existingNode.classList.add('active');
+            updateFoldStatus(sec);
+          }, 200);
+          var body = existingNode.querySelector('.think-node-body');
+          if (body) body.textContent = text;
+        } else {
+          var connector = pipeline.children.length > 0 ? '<div class="think-connector"></div>' : '';
+          var label = NODE_LABELS[type] || type;
+          var node = document.createElement('div');
+          node.className = 'think-node ' + type + ' active';
+          node.innerHTML = connector + '<span class="think-node-badge">' + label + '</span><span class="think-node-body">' + escapeHtml(text) + '</span>';
+          pipeline.appendChild(node);
+        }
+        updateFoldStatus(sec);
+        scrollToBottom();
+      }
+
+      function updateFoldStatus(thinkSection) {
+        var pipeline = thinkSection.querySelector('.think-pipeline');
+        if (!pipeline) return;
+        var total = pipeline.querySelectorAll('.think-node').length;
+        var done = pipeline.querySelectorAll('.think-node.done').length;
+        var active = pipeline.querySelector('.think-node.active');
+        var badge = thinkSection.querySelector('.fold-status');
+        if (!badge) return;
+        if (active) {
+          var activeLabel = active.querySelector('.think-node-badge');
+          badge.textContent = (activeLabel ? activeLabel.textContent.replace(/[✓\s]/g, '') : '') + '中…';
+          badge.className = 'fold-status running';
+        } else if (done >= total && total > 0) {
+          badge.textContent = '已完成';
+          badge.className = 'fold-status done';
+        } else {
+          badge.textContent = '';
+          badge.className = 'fold-status';
+        }
+      }
+
+      // 流式逐个展开 6 个阶段（全量已知时使用）
+      function streamRevealThinkNodes(responseRow, stages) {
+        var sec = ensureThinkSection(responseRow);
+        var pipeline = sec.querySelector('.think-pipeline');
+        if (!pipeline) return;
+        // 清除之前的定时器
+        var rowId = responseRow.dataset.rowId || ('row-' + Date.now());
+        responseRow.dataset.rowId = rowId;
+        if (thinkRevealTimers[rowId]) {
+          thinkRevealTimers[rowId].forEach(function (t) { clearTimeout(t); });
+        }
+        // 先创建所有节点，全部可见（pending 态，灰色）
+        stages.forEach(function (tn, idx) {
+          var connector = idx > 0 ? '<div class="think-connector"></div>' : '';
+          var label = NODE_LABELS[tn.type] || tn.type;
+          var node = document.createElement('div');
+          node.className = 'think-node ' + tn.type + ' pending';
+          node.dataset.stageType = tn.type;
+          node.innerHTML = connector + '<span class="think-node-badge">' + label + '</span><span class="think-node-body">' + escapeHtml(tn.text) + '</span>';
+          pipeline.appendChild(node);
+        });
+        // 第一个立即激活
+        if (stages.length > 0) {
+          var first = pipeline.querySelector('.think-node.' + stages[0].type);
+          if (first) { first.classList.remove('pending'); first.classList.add('active'); }
+        }
+        // 逐一流式切换：active → done + 下一个 → active
+        var timers = [];
+        if (stages.length > 1) {
+          stages.forEach(function (tn, idx) {
+            if (idx === 0) return; // 跳过第一个（已激活）
+            var t = setTimeout(function () {
+              // 前一个 active → done
+              var prevActive = pipeline.querySelector('.think-node.active');
+              if (prevActive) { prevActive.classList.remove('active'); prevActive.classList.add('done'); }
+              // 当前 pending → active
+              var cur = pipeline.querySelector('.think-node.' + tn.type);
+              if (cur) { cur.classList.remove('pending'); cur.classList.add('active'); }
+              updateFoldStatus(sec);
+              scrollToBottom();
+            }, idx * 300);
+            timers.push(t);
+          });
+        }
+        thinkRevealTimers[rowId] = timers;
+      }
+
+      function finishThinkSection(responseRow) {
+        var sec = responseRow.querySelector('.think-section');
+        if (!sec) return;
+        // 清除流式展开定时器
+        var rowId = responseRow.dataset.rowId;
+        if (rowId && thinkRevealTimers[rowId]) {
+          thinkRevealTimers[rowId].forEach(function (t) { clearTimeout(t); });
+          delete thinkRevealTimers[rowId];
+        }
+        var foldSection = sec.querySelector('.fold-section');
+        if (foldSection) foldSection.classList.add('user-fold');
+        var pipeline = sec.querySelector('.think-pipeline');
+        if (pipeline) {
+          var nodes = pipeline.querySelectorAll('.think-node');
+          nodes.forEach(function (n) {
+            n.classList.remove('active', 'pending');
+            n.classList.add('done');
+          });
+          updateFoldStatus(sec);
+        }
+      }
+
+      function renderSearchSources(responseRow, sources) {
+        if (!sources || !sources.length) return;
+
+        var bubble = responseRow.querySelector('.silk-bubble');
+        if (!bubble) return;
+        var mdContent = bubble.querySelector('.md-content');
+
+        // ── 查找或创建合并容器 ──
+        var summaryWrap = bubble.querySelector('.search-summary-list');
+        var sourceWrap = bubble.querySelector('.search-source');
+
+        var isFirstBatch = !summaryWrap && !sourceWrap;
+
+        // ── 1. 灰色摘要区（合并到同一个折叠区）──
+        var hasSnippets = sources.some(function(s) { return s.snippet && s.snippet.trim(); });
+        if (hasSnippets) {
+          if (!summaryWrap) {
+            summaryWrap = document.createElement('div');
+            summaryWrap.className = 'search-summary-list fold-section';
+            summaryWrap.innerHTML = '<div class="fold-section-header" onclick="this.parentElement.classList.toggle(\'user-fold\')">' +
+              '<svg class="fold-chevron" viewBox="0 0 14 14" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' +
+              '<span>搜索摘要</span>' +
+            '</div>' +
+            '<div class="fold-section-body"></div>';
+            if (mdContent) {
+              bubble.insertBefore(summaryWrap, mdContent);
+            } else {
+              bubble.appendChild(summaryWrap);
+            }
+          }
+          var summaryBody = summaryWrap.querySelector('.fold-section-body');
+          sources.forEach(function (s) {
+            var item = document.createElement('div');
+            item.className = 'search-summary-item';
+            item.innerHTML = '<div class="search-summary-item-title">' + escapeHtml(s.title || '') + '</div>' +
+              (s.snippet ? '<div class="search-summary-item-body">' + escapeHtml(s.snippet.slice(0, 200)) + '</div>' : '');
+            summaryBody.appendChild(item);
+          });
+          // 更新计数
+          var count = summaryBody.querySelectorAll('.search-summary-item').length;
+          var label = summaryWrap.querySelector('.fold-section-header span');
+          if (label) label.textContent = '搜索摘要 (' + count + ')';
+        }
+
+        // ── 2. 搜索资源折叠区（合并到同一个折叠区）──
+        if (!sourceWrap) {
+          sourceWrap = document.createElement('div');
+          sourceWrap.className = 'search-source fold-section';
+          sourceWrap.innerHTML = '<div class="fold-section-header" onclick="this.parentElement.classList.toggle(\'user-fold\')">' +
+            '<svg class="fold-chevron" viewBox="0 0 14 14" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' +
+            '<span>搜索资源</span>' +
+          '</div>' +
+          '<div class="fold-section-body"></div>';
+          sourceWrap.classList.add('user-fold');
+          if (mdContent) {
+            bubble.insertBefore(sourceWrap, mdContent);
+          } else {
+            bubble.appendChild(sourceWrap);
+          }
+        }
+        var sourceBody = sourceWrap.querySelector('.fold-section-body');
+        sources.forEach(function (s) {
+          var row = document.createElement('div');
+          row.style.margin = '2px 0';
+          row.innerHTML = '<a href="' + escapeHtml(s.url) + '" target="_blank" rel="noopener">' + escapeHtml(s.title) + '</a>';
+          sourceBody.appendChild(row);
+        });
+        var sourceCount = sourceBody.querySelectorAll('a').length;
+        var sourceLabel = sourceWrap.querySelector('.fold-section-header span');
+        if (sourceLabel) sourceLabel.textContent = '搜索资源 (' + sourceCount + ')';
+
+        // ── 首次批次的搜索摘要 2.5s 后自动折叠 ──
+        if (isFirstBatch && summaryWrap) {
+          var _sumEl = summaryWrap;
+          setTimeout(function () {
+            if (_sumEl && !_sumEl.classList.contains('user-fold')) {
+              _sumEl.classList.add('user-fold');
+            }
+          }, 2500);
+        }
+      }
+
+      // =========================================================================
+      // CONTENT FOLD — 正文内容折叠
+      // 处理联网搜索等场景下的大篇幅文本，默认折叠，用户可手动展开
+      // =========================================================================
+
+      /** 判断内容是否需要折叠（>500 字符 或 >15 行） */
+      function shouldFoldContent(content) {
+        if (!content) return false;
+        var lines = content.split('\n');
+        return content.length > 500 || lines.length > 15;
+      }
+
+      /** 从完整内容提取前 N 行作为折叠预览摘要 */
+      function generateContentPreview(content) {
+        if (!content) return '';
+        var plain = content
+          .replace(/```[\s\S]*?```/g, '[代码块]')
+          .replace(/`[^`]+`/g, '')
+          .replace(/#{1,6}\s+/g, '')
+          .replace(/\*\*([^*]+)\*\*/g, '$1')
+          .replace(/\*([^*]+)\*/g, '$1')
+          .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1')
+          .replace(/^\s*[-*+]\s+/gm, '')
+          .replace(/^\s*\d+\.\s+/gm, '')
+          .replace(/\n{2,}/g, '\n')
+          .trim();
+        var lines = plain.split('\n').filter(function (l) { return l.trim(); });
+        var preview = lines.slice(0, 3).join(' · ');
+        if (lines.length > 3) preview += ' …';
+        return preview.length > 150 ? preview.slice(0, 147) + '…' : preview;
+      }
+
+      /** 为机器人回复气泡应用折叠（仅当内容超出阈值时） */
+      function applyContentFold(responseRow, rawContent) {
+        // 用户要求：正文大段内容直接全部展示，不再做展开全文折叠
+        return;
+      }
+
+      /** 重新应用页面中所有机器人消息的折叠 */
+      function reapplyAllContentFolds() {
+        var rows = document.querySelectorAll('#chatBody .silk-bubble-row.bot');
+        rows.forEach(function (row) {
+          var bubble = row.querySelector('.silk-bubble');
+          if (!bubble) return;
+          // 已有折叠容器的跳过
+          if (bubble.querySelector('.content-fold-container')) return;
+          var mdContent = bubble.querySelector('.md-content');
+          if (!mdContent) return;
+          var raw = mdContent.textContent || '';
+          applyContentFold(row, raw);
+        });
+      }
+
+      async function sendMessage() {
+        var message = chatInput.value.trim();
+        if (!message && !pendingFiles.length) return;
+        chatInput.value = '';
+        chatInput.style.height = 'auto';
+
+        btnSend.classList.add('loading');
+
+        // 读取待上传文件内容
+        var fileContents = await readFilesContents();
+        // 将文件名拼入消息
+        if (fileContents.length > 0) {
+          var fileList = fileContents.map(function (f) { return f.name; }).join('、');
+          if (message) {
+            message = '【上传文件：' + fileList + '】\n' + message;
+          } else {
+            message = '请分析我上传的文件：' + fileList;
+          }
+        }
+
+        addMessage(message, true);
+        addTypingIndicator();
+        addHistoryEntry(message);
+
+        // 发送后清空文件列表
+        pendingFiles = [];
+        renderFileTags();
+
+        try {
+          var body = { message: message, session_id: getSessionId() };
+          if (fileContents.length > 0) {
+            body.files = fileContents;
+          }
+          var response = await fetch(API_BASE_URL + '/chat/stream', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+          });
+          if (!response.ok) throw new Error('请求失败');
+          var reader = response.body.getReader();
+          var decoder = new TextDecoder('utf-8');
+          var botResponse = '';
+          var responseElement = null;
+          var bufferedSources = null;   // 缓冲搜索来源
+          _thinkingFinished = false; // 思考链是否已结束
+          var _rafPending = false;      // requestAnimationFrame 是否已排期
+          var _mdEl = null;             // 缓存的 md-content 元素引用
+
+          function flushMarkdown() {
+            _rafPending = false;
+            if (_mdEl) _mdEl.innerHTML = renderMarkdown(botResponse);
+            scrollToBottom();
+          }
+
+          function ensureResponseElement() {
+            if (responseElement) return;
+            removeTypingIndicator();
+            responseElement = document.createElement('div');
+            responseElement.className = 'silk-bubble-row bot';
+            responseElement.innerHTML = '<div class="silk-avatar"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="2" stroke="currentColor" stroke-width="1.2"/><circle cx="6" cy="7.5" r="1.2" fill="currentColor"/><circle cx="10" cy="7.5" r="1.2" fill="currentColor"/><path d="M6 10.5c.6.5 1.3.8 2 .8s1.4-.3 2-.8" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/><path d="M5 3V2a1 1 0 011-1h4a1 1 0 011 1v1" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg></div><div style="display:flex;flex-direction:column;gap:4px;flex:1;min-width:0"><div class="silk-bubble"><div class="md-content"></div></div><div class="message-time">' + new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' }) + '</div></div>';
+            document.getElementById('chatBody').appendChild(responseElement);
+          }
+
+          while (true) {
+            var result = await reader.read();
+            if (result.done) break;
+            var chunk = decoder.decode(result.value);
+            var lines = chunk.split('\n').filter(function (l) { return l.trim(); });
+            for (var i = 0; i < lines.length; i++) {
+              var line = lines[i];
+              try {
+                var data = JSON.parse(line);
+                if (data.done) break;
+
+                // ── 思考链事件（逐节点队列渲染） ──
+                if (data.thinking) {
+                  ensureResponseElement();
+                  data.thinking.forEach(function (tn) {
+                    enqueueThinkNode(responseElement, tn.type, tn.text);
+                  });
+                  continue;
+                }
+
+                // ── 思考链结束 ──
+                if (data.thinking_end) {
+                  _thinkingFinished = true;
+                  continue;
+                }
+
+                // ── 搜索源头 ──
+                if (data.sources) {
+                  if (responseElement) {
+                    // tokens 已到达，直接渲染搜索资源
+                    renderSearchSources(responseElement, data.sources);
+                  } else {
+                    // tokens 还没到，缓冲等待
+                    bufferedSources = data.sources;
+                  }
+                  continue;
+                }
+
+                // ── 普通 token ──
+                if (data.token) {
+                  botResponse += data.token;
+                  ensureResponseElement();
+                  // 首次 token 时，渲染缓冲的搜索来源
+                  if (botResponse.length <= data.token.length) {
+                    if (bufferedSources) {
+                      renderSearchSources(responseElement, bufferedSources);
+                      bufferedSources = null;
+                    }
+                  }
+                  if (!_mdEl) _mdEl = responseElement.querySelector('.silk-bubble .md-content');
+                  if (!_rafPending) {
+                    _rafPending = true;
+                    requestAnimationFrame(flushMarkdown);
+                  }
+                }
+              } catch (e) { console.error('解析响应失败:', e); }
+            }
+          }
+          removeTypingIndicator();
+          if (botResponse) {
+            if (!responseElement) addMessage(botResponse, false);
+            else {
+              // 流式结束，取消 pending RAF 并做最后一次同步渲染
+              if (_rafPending) { _rafPending = false; }
+              if (_mdEl) _mdEl.innerHTML = renderMarkdown(botResponse);
+              var actionsWrapEl = document.createElement('div');
+              actionsWrapEl.className = 'message-actions visible';
+              var copyBtn = document.createElement('button');
+              copyBtn.className = 'copy-btn';
+              copyBtn.title = '复制';
+              copyBtn.innerHTML = '<svg viewBox="0 0 14 14" fill="none"><rect x="3" y="3" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M11 3v8a1 1 0 01-1 1H3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>';
+              (function (content, btn) {
+                btn.addEventListener('click', function (e) {
+                  e.stopPropagation();
+                  navigator.clipboard.writeText(content).then(function () {
+                    btn.classList.add('copied');
+                    btn.innerHTML = '<svg viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+                    setTimeout(function () { btn.classList.remove('copied'); btn.innerHTML = '<svg viewBox="0 0 14 14" fill="none"><rect x="3" y="3" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M11 3v8a1 1 0 01-1 1H3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>'; }, 2000);
+                  });
+                });
+              })(botResponse, copyBtn);
+              actionsWrapEl.appendChild(copyBtn);
+              createQuoteBtn(botResponse, actionsWrapEl);
+              createExportBtn(botResponse, actionsWrapEl);
+              responseElement.querySelector('.silk-bubble').appendChild(actionsWrapEl);
+              conversationMessages.push({ content: botResponse, isUser: false, time: Date.now() });
+              saveHistoryEntry();
+              // 大篇幅文本自动折叠
+              applyContentFold(responseElement, botResponse);
+            }
+          }
+        } catch (e) {
+          removeTypingIndicator();
+          addMessage('抱歉，请求失败: ' + e.message, false);
+          console.error('发送消息失败:', e);
+        }
+        btnSend.classList.remove('loading');
+      }
+
+      function saveHistoryEntry() {
+        if (currentHistoryId && historyData[currentHistoryId]) {
+          historyData[currentHistoryId].messages = conversationMessages.slice();
+          if (historyData[currentHistoryId].messages.length > MAX_MSGS_PER_CONV) {
+            historyData[currentHistoryId].messages = historyData[currentHistoryId].messages.slice(-MAX_MSGS_PER_CONV);
+          }
+          saveHistory();
+        }
+      }
+
+      function newConversation() {
+        conversationMessages = [];
+        currentHistoryId = null;
+        isLoadedFromHistory = false;
+        currentSessionId = null;  // 重置会话 ID，新对话 = 新记忆
+        try { localStorage.removeItem('agent-studio-session-id'); } catch (_) {}
+        var all = historyItemsWrap.querySelectorAll('.history-item');
+        for (var i = 0; i < all.length; i++) all[i].classList.remove('active');
+        var chatBody = document.getElementById('chatBody');
+        chatBody.innerHTML = '';
+        chatBody.classList.remove('has-messages');
+        chatBody.appendChild(emptyState);
+        emptyState.style.display = 'block';
+        // 重新触发空状态入场动画
+        emptyState.style.animation = 'none';
+        emptyState.offsetHeight; // 强制回流
+        emptyState.style.animation = 'fadeUp 0.5s var(--ease)';
+        chatInput.value = '';
+        chatInput.style.height = 'auto';
+        chatBody.scrollTop = 0;
+        chatInput.focus();
+      }
+
+      document.getElementById('btnNewChat').addEventListener('click', newConversation);
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+{
+  // Fix "Editor support is inactive since language server is set to None."
+  "python.languageServer": "None",
+
+  // Force workspace interpreter to project venv (Windows)
+  "python.defaultInterpreterPath": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+
+  // Pylance / analysis defaults
+  "python.analysis.diagnosticMode": "workspace",
+  "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.enabled": true,
+  "python.analysis.indexing": true,
+  "python.analysis.autoImportCompletions": true,
+  // Let Pylance resolve imports from the src/ layout
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}\\src"
+  ],
+
+  // Ensure .py files are treated as Python
+  "files.associations": {
+    "*.py": "python"
+  },
+
+  // Avoid indexing common noise
+  "python.analysis.exclude": [
+    "**/__pycache__",
+    "**/.venv",
+    "**/.git",
+    "**/logs"
+  ],
+
+  // Ensure Ctrl+Click is Go to Definition (multi-cursor uses Alt+Click)
+  "editor.multiCursorModifier": "alt",
+  "cursorpyright.analysis.autoImportCompletions": true,
+  "cursorpyright.analysis.diagnosticMode": "workspace",
+  "cursorpyright.analysis.exclude": [
+    "**/__pycache__",
+    "**/.venv",
+    "**/.git",
+    "**/logs"
+  ],
+  "cursorpyright.analysis.extraPaths": [
+    "${workspaceFolder}\\src"
+  ],
+  "cursorpyright.analysis.typeCheckingMode": "basic"
+}
+

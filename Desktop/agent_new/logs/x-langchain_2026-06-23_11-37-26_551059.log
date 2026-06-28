@@ -1,0 +1,11 @@
+2026-06-23 11:37:28.650 | INFO     | agents.generative_agent:clear:272 - 记忆流: 已清空
+2026-06-23 11:37:28.651 | INFO     | agents.generative_agent:clear:609 - 生成式Agent: 已清空全部状态
+2026-06-23 11:37:29.148 | INFO     | agents.generative_agent:add:200 - 记忆流: +m00001 importance=3.7 (['你好', '我想学', 'Python']...)
+2026-06-23 11:37:29.149 | INFO     | agents.generative_agent:add:200 - 记忆流: +m00002 importance=3.8 (['推荐', '一些', '机器']...)
+2026-06-23 11:37:29.150 | INFO     | agents.generative_agent:add:200 - 记忆流: +m00003 importance=3.9 (['项目', '需要', '一个']...)
+2026-06-23 11:37:29.150 | INFO     | agents.generative_agent:add:200 - 记忆流: +m00004 importance=3.3 (['今天天气', '真热', '夏天']...)
+2026-06-23 11:37:29.150 | INFO     | agents.generative_agent:add:200 - 记忆流: +m00005 importance=3.5 (['之前', 'Python', '书去']...)
+2026-06-23 11:37:29.150 | INFO     | agents.generative_agent:retrieve:247 - 记忆流检索: 'Python...' → 5/5 (recency=0.748)
+2026-06-23 11:37:29.151 | INFO     | agents.generative_agent:retrieve:247 - 记忆流检索: '项目...' → 5/5 (recency=0.756)
+2026-06-23 11:37:29.151 | INFO     | agents.generative_agent:retrieve:247 - 记忆流检索: '天气...' → 5/5 (recency=0.456)
+2026-06-23 11:37:29.151 | INFO     | agents.generative_agent:retrieve:247 - 记忆流检索: '我想继续做图片分类项目...' → 5/5 (recency=0.681)

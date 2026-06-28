@@ -1,0 +1,120 @@
+================================================================================
+                    x-langchain 环境配置说明
+================================================================================
+
+一、基础环境要求
+--------------------------------------------------------------------------------
+| 要求 | 版本 | 说明 |
+|------|------|------|
+| Python | >= 3.11 | 推荐 3.11.x 或 3.12.x |
+| 包管理器 | uv / pip | uv 为推荐工具 |
+
+二、依赖清单
+--------------------------------------------------------------------------------
+
+【核心依赖】
+langchain>=0.2.0
+langchain-openai>=0.1.0
+langchain-anthropic>=0.1.0
+langchain-community>=0.4.1
+pydantic-settings>=2.0.0
+python-dotenv>=1.0.0
+dashscope>=1.25.11
+duckduckgo-search>=8.1.1
+ddgs>=9.11.1
+sqlalchemy>=2.0.0
+pymysql>=1.1.0
+langchain-mcp-adapters>=0.2.2
+loguru>=0.7.3
+
+【后端服务依赖】
+fastapi>=0.100.0
+uvicorn>=0.20.0
+
+【可选依赖】
+gradio>=5.0.0
+pillow>=10.0.0
+
+【开发依赖】
+pytest>=9.0.2
+pytest-cov>=7.0.0
+
+三、环境变量配置 (.env 文件)
+--------------------------------------------------------------------------------
+
+【模型 API 配置 - DeepSeek（推荐）】
+MODEL_NAME=deepseek
+DEEPSEEK_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+DEEPSEEK_API_BASE=https://api.deepseek.com/v1
+DEEPSEEK_MODEL_NAME=deepseek-chat
+
+【模型 API 配置 - 豆包】
+MODEL_NAME=doubao
+DOUBAO_API_KEY=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+DOUBAO_API_BASE=https://ark.cn-beijing.volces.com/api/v3
+DOUBAO_MODEL_NAME=ep-xxxxxxxxxxxxxx
+
+【模型 API 配置 - 通义千问】
+MODEL_NAME=tongyi
+ALIYUN_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ALIYUN_MODEL_NAME=qwen-plus
+
+【模型 API 配置 - Mock（开发测试用）】
+MODEL_NAME=mock
+
+【外部服务配置】
+AMAP_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+LANGSMITH_API_KEY=lsv2_pt_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx_xxxxxxxxxxxxx
+
+【数据库配置】
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=your_password
+DB_NAME=your_database
+
+【通用配置】
+TEMPERATURE=0.0
+DEBUG=False
+STRUCTURED=False
+MCP_ENABLED=False
+TEXT_TO_SQL_MAX_ROWS=100
+TEXT_TO_SQL_QUERY_TIMEOUT=30
+
+四、安装命令
+--------------------------------------------------------------------------------
+
+【使用 uv（推荐）】
+uv sync
+uv run src/main.py
+uv run python backend/app.py
+
+【使用 pip】
+pip install -e .
+pip install fastapi uvicorn
+python run.py
+python backend/app.py
+
+【启动前端】
+cd frontend
+python -m http.server 8080
+
+五、服务地址
+--------------------------------------------------------------------------------
+| 服务 | 地址 |
+|------|------|
+| CLI | 命令行直接交互 |
+| 后端 API | http://localhost:8001 |
+| 前端界面 | http://localhost:8080 |
+
+六、快速开始
+--------------------------------------------------------------------------------
+1. git clone https://gitee.com/chain-engine/x-langchain.git
+2. cd x-langchain
+3. cp .env.example .env
+4. 编辑 .env 配置 API Key
+5. python run.py (CLI模式) 或 python backend/app.py (Web模式)
+
+================================================================================
+                    配置完成后即可启动使用
+================================================================================

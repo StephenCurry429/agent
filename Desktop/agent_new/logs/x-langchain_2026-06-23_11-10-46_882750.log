@@ -1,0 +1,2 @@
+2026-06-23 11:10:47.077 | INFO     | core.context_compressor:_summarize_messages:78 - 上下文压缩完成: 20 条消息 → 60 字符摘要
+2026-06-23 11:10:47.077 | INFO     | core.context_compressor:compress:179 - 上下文压缩: 30 条消息 (525tok) → 11 条 (205tok), 压缩比 39.0%

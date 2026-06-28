@@ -1,0 +1,1 @@
+CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, email TEXT, created_at TEXT); INSERT INTO users (name, email, created_at) VALUES ('张三', 'zhangsan@example.com', '2024-01-15'); INSERT INTO users (name, email, created_at) VALUES ('李四', 'lisi@example.com', '2024-01-20'); INSERT INTO users (name, email, created_at) VALUES ('王五', 'wangwu@example.com', '2024-01-25');

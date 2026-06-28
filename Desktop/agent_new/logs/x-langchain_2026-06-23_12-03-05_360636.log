@@ -1,0 +1,5 @@
+2026-06-23 12:03:07.489 | INFO     | core.semantic_memory:_load_memories:101 - 语义记忆: 从文件恢复 0 条记忆
+2026-06-23 12:03:07.492 | INFO     | agents.generative_agent:_load:137 - 记忆流: 恢复 6 条记忆
+2026-06-23 12:03:07.492 | INFO     | agents.generative_agent:_load:405 - 规划: 恢复 0 个计划
+2026-06-23 12:03:07.492 | INFO     | agents.generative_agent:get_generative_agent:623 - 生成式Agent: 初始化完成 (记忆流 + 反思 + 规划)
+2026-06-23 12:03:07.962 | INFO     | agents.generative_agent:retrieve:247 - 记忆流检索: '说明一下深度学习的基础概念...' → 5/6 (recency=0.788)

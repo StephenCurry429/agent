@@ -1,0 +1,17 @@
+{
+  "include": ["src", "examples", "tests"],
+  "exclude": [
+    "**/__pycache__",
+    "**/.venv",
+    "**/.git",
+    "**/logs"
+  ],
+  "executionEnvironments": [
+    {
+      "root": ".",
+      "extraPaths": ["src"]
+    }
+  ],
+  "typeCheckingMode": "basic"
+}
+

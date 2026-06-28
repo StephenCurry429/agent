@@ -1,0 +1,31 @@
+2026-06-23 11:32:42.175 | INFO     | core.semantic_memory:clear:269 - 语义记忆: 已清空
+2026-06-23 11:32:45.590 | WARNING  | rag.vector_store:_get_embeddings:55 - RAG Embedding 尝试 text-embedding-3-small @ http://localhost:8317/v1 失败: 404 page not found
+2026-06-23 11:32:45.901 | WARNING  | rag.vector_store:_get_embeddings:55 - RAG Embedding 尝试 text-embedding-ada-002 @ http://localhost:8317/v1 失败: 404 page not found
+2026-06-23 11:32:45.901 | WARNING  | core.semantic_memory:_get_shared_embeddings:46 - 语义记忆: 无法获取共享 embedding，语义检索不可用
+2026-06-23 11:32:45.901 | INFO     | core.semantic_memory:add_memory:183 - 语义记忆: 已存储 [mem-3d6ca1ab8759] topic=['今天天气', '北京', '怎么样']
+2026-06-23 11:32:46.204 | WARNING  | rag.vector_store:_get_embeddings:55 - RAG Embedding 尝试 text-embedding-3-small @ http://localhost:8317/v1 失败: 404 page not found
+2026-06-23 11:32:46.506 | WARNING  | rag.vector_store:_get_embeddings:55 - RAG Embedding 尝试 text-embedding-ada-002 @ http://localhost:8317/v1 失败: 404 page not found
+2026-06-23 11:32:46.506 | WARNING  | core.semantic_memory:_get_shared_embeddings:46 - 语义记忆: 无法获取共享 embedding，语义检索不可用
+2026-06-23 11:32:46.506 | INFO     | core.semantic_memory:add_memory:183 - 语义记忆: 已存储 [mem-1cf25002977a] topic=['怎么', '文件', '读取']
+2026-06-23 11:32:46.809 | WARNING  | rag.vector_store:_get_embeddings:55 - RAG Embedding 尝试 text-embedding-3-small @ http://localhost:8317/v1 失败: 404 page not found
+2026-06-23 11:32:47.113 | WARNING  | rag.vector_store:_get_embeddings:55 - RAG Embedding 尝试 text-embedding-ada-002 @ http://localhost:8317/v1 失败: 404 page not found
+2026-06-23 11:32:47.114 | WARNING  | core.semantic_memory:_get_shared_embeddings:46 - 语义记忆: 无法获取共享 embedding，语义检索不可用
+2026-06-23 11:32:47.114 | INFO     | core.semantic_memory:add_memory:183 - 语义记忆: 已存储 [mem-8969beee4b97] topic=['什么', '模型']
+2026-06-23 11:32:47.414 | WARNING  | rag.vector_store:_get_embeddings:55 - RAG Embedding 尝试 text-embedding-3-small @ http://localhost:8317/v1 失败: 404 page not found
+2026-06-23 11:32:47.715 | WARNING  | rag.vector_store:_get_embeddings:55 - RAG Embedding 尝试 text-embedding-ada-002 @ http://localhost:8317/v1 失败: 404 page not found
+2026-06-23 11:32:47.716 | WARNING  | core.semantic_memory:_get_shared_embeddings:46 - 语义记忆: 无法获取共享 embedding，语义检索不可用
+2026-06-23 11:32:47.716 | INFO     | core.semantic_memory:add_memory:183 - 语义记忆: 已存储 [mem-a6d2998610a0] topic=['旅游景点', '推荐', '北京']
+2026-06-23 11:32:48.016 | WARNING  | rag.vector_store:_get_embeddings:55 - RAG Embedding 尝试 text-embedding-3-small @ http://localhost:8317/v1 失败: 404 page not found
+2026-06-23 11:32:48.318 | WARNING  | rag.vector_store:_get_embeddings:55 - RAG Embedding 尝试 text-embedding-ada-002 @ http://localhost:8317/v1 失败: 404 page not found
+2026-06-23 11:32:48.318 | WARNING  | core.semantic_memory:_get_shared_embeddings:46 - 语义记忆: 无法获取共享 embedding，语义检索不可用
+2026-06-23 11:32:48.318 | INFO     | core.semantic_memory:retrieve:237 - 语义记忆检索: query='天气...' → 1/4 条 (top: 0.4000)
+2026-06-23 11:32:48.653 | WARNING  | rag.vector_store:_get_embeddings:55 - RAG Embedding 尝试 text-embedding-3-small @ http://localhost:8317/v1 失败: 404 page not found
+2026-06-23 11:32:48.964 | WARNING  | rag.vector_store:_get_embeddings:55 - RAG Embedding 尝试 text-embedding-ada-002 @ http://localhost:8317/v1 失败: 404 page not found
+2026-06-23 11:32:48.964 | WARNING  | core.semantic_memory:_get_shared_embeddings:46 - 语义记忆: 无法获取共享 embedding，语义检索不可用
+2026-06-23 11:32:49.265 | WARNING  | rag.vector_store:_get_embeddings:55 - RAG Embedding 尝试 text-embedding-3-small @ http://localhost:8317/v1 失败: 404 page not found
+2026-06-23 11:32:49.568 | WARNING  | rag.vector_store:_get_embeddings:55 - RAG Embedding 尝试 text-embedding-ada-002 @ http://localhost:8317/v1 失败: 404 page not found
+2026-06-23 11:32:49.569 | WARNING  | core.semantic_memory:_get_shared_embeddings:46 - 语义记忆: 无法获取共享 embedding，语义检索不可用
+2026-06-23 11:32:49.868 | WARNING  | rag.vector_store:_get_embeddings:55 - RAG Embedding 尝试 text-embedding-3-small @ http://localhost:8317/v1 失败: 404 page not found
+2026-06-23 11:32:50.171 | WARNING  | rag.vector_store:_get_embeddings:55 - RAG Embedding 尝试 text-embedding-ada-002 @ http://localhost:8317/v1 失败: 404 page not found
+2026-06-23 11:32:50.171 | WARNING  | core.semantic_memory:_get_shared_embeddings:46 - 语义记忆: 无法获取共享 embedding，语义检索不可用
+2026-06-23 11:32:50.171 | INFO     | core.semantic_memory:retrieve:237 - 语义记忆检索: query='北京景点...' → 1/4 条 (top: 0.4000)

@@ -1,0 +1,5 @@
+2026-05-26 22:21:45.829 | INFO     | main:main:119 - 正在验证模型配置: mock
+2026-05-26 22:21:45.829 | INFO     | main:main:125 - 配置信息: DEBUG=True, STRUCTURED=False
+2026-05-26 22:21:45.829 | INFO     | main:main:130 - 正在创建 Agent (使用 mock 模型)...
+2026-05-26 22:21:45.829 | INFO     | models.providers:get_llm_provider:356 - 获取 LLM 提供者: mock
+2026-05-26 22:21:45.830 | INFO     | models.providers:create_chat_model:269 - 创建模拟聊天模型（用于测试）
